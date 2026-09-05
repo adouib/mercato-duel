@@ -1,0 +1,1576 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1410">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Mercato Duel">
+<title>Mercato Duel</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Source+Sans+3:wght@400;600&display=swap">
+<style>
+:root{
+  --night:#0b1410; --panel:#122019; --panel-2:#183126; --line:#274436;
+  --chalk:#eef5ee; --chalk-2:#b7c8bc; --muted:#7f958a;
+  --pitch:#1f7a4a; --pitch-bright:#3ccf7f; --amber:#f5a623; --amber-deep:#c97d12;
+  --danger:#e5533d; --p1:#3ccf7f; --p2:#5aa9ff;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--night);color:var(--chalk);font-family:"Source Sans 3","Segoe UI",system-ui,sans-serif;font-size:16px;line-height:1.4;
+  background-image:
+    repeating-linear-gradient(90deg, rgba(255,255,255,.012) 0 64px, rgba(0,0,0,0) 64px 128px),
+    radial-gradient(ellipse at 50% -10%, #1d3b2b 0%, var(--night) 60%);
+  background-attachment:fixed}
+button{font-family:inherit;cursor:pointer}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+.phone{max-width:440px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;padding:12px 14px 24px;position:relative}
+@media (min-width:600px){.phone{min-height:calc(100vh - 32px);margin:16px auto;border:1px solid var(--line);border-radius:28px;background:rgba(11,20,16,.55);box-shadow:0 30px 80px rgba(0,0,0,.5)}}
+.top{display:flex;align-items:center;justify-content:space-between;padding:6px 4px 10px}
+.logo{font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:26px;letter-spacing:.04em;text-transform:uppercase;line-height:1;margin:0}
+.logo span{color:var(--amber)}
+.ghost{background:transparent;border:1px solid var(--line);color:var(--chalk-2);border-radius:999px;padding:6px 12px;font-size:13px;font-weight:600}
+.ghost:hover{border-color:var(--chalk-2);color:var(--chalk)}
+section{display:none;flex:1;flex-direction:column}
+section.on{display:flex}
+.h{font-family:"Barlow Condensed",sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.eyebrow{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+/* home */
+.hero{padding:18px 4px 14px}
+.hero h2{font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:40px;line-height:.95;margin:0 0 8px;text-wrap:balance}
+.hero p{color:var(--chalk-2);margin:0;font-size:15px}
+.field{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:10px}
+.field label.lbl{display:block;font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.seg{display:flex;gap:6px}
+.seg button{flex:1;background:var(--panel-2);border:1px solid var(--line);color:var(--chalk-2);border-radius:10px;padding:10px 4px;font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:18px}
+.seg button[aria-pressed="true"]{background:var(--pitch);border-color:var(--pitch-bright);color:#fff}
+.names{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.names input{width:100%;background:var(--panel-2);border:1px solid var(--line);color:var(--chalk);border-radius:10px;padding:10px 12px;font-size:16px;font-family:inherit}
+.hint{font-size:13px;color:var(--muted);margin:6px 0 0}
+.cta{width:100%;background:var(--amber);color:#1a1200;border:none;border-radius:14px;padding:16px;font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:24px;letter-spacing:.06em;text-transform:uppercase;margin-top:6px;box-shadow:0 8px 24px rgba(245,166,35,.25)}
+.cta:hover{background:#ffb640}
+.stats{font-size:13px;color:var(--muted);text-align:center;margin-top:12px}
+.toggle{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.toggle input{width:20px;height:20px;accent-color:var(--pitch-bright)}
+.poolsel{width:100%;margin-top:8px;appearance:none;-webkit-appearance:none;background:var(--panel-2) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'><path d='M1 1l6 6 6-6' fill='none' stroke='%23b7c8bc' stroke-width='2'/></svg>") no-repeat right 12px center;border:1px solid var(--line);color:var(--chalk);border-radius:10px;padding:11px 36px 11px 12px;font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:19px;letter-spacing:.02em}
+.poolsel option{background:#122019;color:#eef5ee}
+.poolsel option:disabled{color:#7f958a}
+.cta:disabled{opacity:.4;cursor:not-allowed;box-shadow:none}
+/* animations v2 */
+.card{perspective:900px}
+@keyframes deal{0%{transform:rotateY(85deg) translateY(14px);opacity:0}60%{transform:rotateY(-6deg);opacity:1}100%{transform:none}}
+.card.pop{animation:deal .5s cubic-bezier(.2,.7,.3,1.1)}
+.card .shine{position:absolute;inset:0;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.14) 50%,transparent 60%);transform:translateX(-120%);pointer-events:none}
+.card.pop .shine{animation:shine .9s .25s ease-out forwards}
+@keyframes shine{to{transform:translateX(120%)}}
+@keyframes bump{0%{transform:scale(1)}35%{transform:scale(1.22)}100%{transform:scale(1)}}
+.bidbox .cur.bump{animation:bump .35s ease-out}
+.chip{position:absolute;font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:22px;color:var(--amber);pointer-events:none;z-index:15;animation:chip .8s ease-out forwards;text-shadow:0 2px 8px rgba(0,0,0,.5)}
+@keyframes chip{0%{transform:translateY(0);opacity:0}20%{opacity:1}100%{transform:translateY(-46px);opacity:0}}
+.stamp{position:absolute;top:50%;left:50%;z-index:6;transform:translate(-50%,-50%) rotate(-12deg) scale(2.4);border:4px solid var(--amber);color:var(--amber);border-radius:10px;padding:6px 18px;font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:34px;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;opacity:0;background:rgba(11,20,16,.55);animation:stamp .45s cubic-bezier(.2,.8,.3,1.2) forwards}
+.stamp.grn{border-color:var(--pitch-bright);color:var(--pitch-bright)}
+@keyframes stamp{60%{transform:translate(-50%,-50%) rotate(-12deg) scale(.92);opacity:1}100%{transform:translate(-50%,-50%) rotate(-12deg) scale(1);opacity:1}}
+@keyframes turnpulse{0%,100%{box-shadow:0 0 0 2px rgba(245,166,35,.25)}50%{box-shadow:0 0 0 4px rgba(245,166,35,.45)}}
+.mgr.turn{animation:turnpulse 1.6s ease-in-out infinite}
+.verdict .w.show{animation:wpop .5s cubic-bezier(.2,.8,.3,1.25)}
+@keyframes wpop{0%{transform:scale(.6);opacity:0}100%{transform:none;opacity:1}}
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:40}
+@media (prefers-reduced-motion: reduce){.card.pop,.card.pop .shine,.bidbox .cur.bump,.chip,.stamp,.mgr.turn,.verdict .w.show{animation:none}.stamp{opacity:1}}
+/* chrono + historique */
+.tbar{height:6px;border-radius:3px;background:var(--panel-2);border:1px solid var(--line);margin:2px 4px 8px;overflow:hidden}
+.tbar i{display:block;height:100%;background:var(--amber);transition:width .2s linear}
+.tbar i.low{background:var(--danger)}
+.tlbl{font-family:"Barlow Condensed",sans-serif;font-weight:700;color:var(--amber);margin-left:8px;font-variant-numeric:tabular-nums}
+.hist{margin-top:12px}
+.hist .row{border-top:1px solid var(--line);font-size:13px}
+.hist .w{color:var(--pitch-bright);font-weight:600}.hist .l{color:var(--danger);font-weight:600}.hist .d{color:var(--muted)}
+.card.expert .sub,.card.expert .flag,.card.expert .pos{display:none}
+.card .xp{font-family:"Barlow Condensed",sans-serif;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+/* classement */
+.strip{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin:0 0 10px}
+.strip .who{min-width:0}
+.strip .who b{display:block;font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:18px;letter-spacing:.03em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.strip .who span{font-size:13px;color:var(--chalk-2)}
+.div{display:inline-block;font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:12px;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border-radius:999px;border:1px solid var(--amber);color:var(--amber);vertical-align:middle;margin-right:6px}
+.rank h2{font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:30px;margin:6px 0 10px;text-transform:uppercase;letter-spacing:.04em}
+.rank .seg{margin-bottom:8px}
+.rtbl{width:100%;border-collapse:collapse;font-size:14px;margin-top:8px}
+.rtbl th{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-align:left;padding:6px 6px;border-bottom:1px solid var(--line)}
+.rtbl td{padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:middle;white-space:nowrap}
+.rtbl td.n,.rtbl th.n{text-align:right;font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:17px;font-variant-numeric:tabular-nums}
+.rtbl tr.me td{background:rgba(245,166,35,.08)}
+.rtbl .pos{color:var(--muted);font-family:"Barlow Condensed",sans-serif;font-weight:700;width:28px}
+.records{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.rec{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.rec .l{font-family:"Barlow Condensed",sans-serif;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.rec .v{font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:26px;line-height:1.1;font-variant-numeric:tabular-nums}
+.rec .v small{font-size:13px;color:var(--muted);font-weight:600;margin-left:2px}
+.rbox{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin-top:10px}
+.rbox .t{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:16px;letter-spacing:.03em;margin:0 0 4px;display:flex;justify-content:space-between;gap:8px}
+.rbox .t .tot{color:var(--amber);font-variant-numeric:tabular-nums}
+.rbox .t .tot.neg{color:var(--danger)}
+.rbox .ln{display:flex;justify-content:space-between;gap:8px;font-size:13.5px;color:var(--chalk-2);padding:2px 0}
+.rbox .ln b{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:16px;font-variant-numeric:tabular-nums;color:var(--chalk)}
+.rbox .ln b.up{color:var(--pitch-bright)}.rbox .ln b.dn{color:var(--danger)}
+.rbox .bn{font-size:13px;color:var(--amber);padding:2px 0}
+.empty{color:var(--muted);font-size:14px;text-align:center;padding:16px 0}
+/* game */
+.board{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.mgr{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px 12px;position:relative;transition:border-color .2s,box-shadow .2s}
+.mgr.turn{border-color:var(--amber);box-shadow:0 0 0 2px rgba(245,166,35,.25)}
+.mgr .nm{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:17px;letter-spacing:.03em;display:flex;align-items:center;gap:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mgr .dot{width:8px;height:8px;border-radius:50%;flex:none}
+.mgr:nth-child(1) .dot{background:var(--p1)}.mgr:nth-child(2) .dot{background:var(--p2)}
+.mgr .bud{font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:30px;line-height:1;margin:4px 0 2px;font-variant-numeric:tabular-nums}
+.mgr .bud small{font-size:14px;font-weight:600;color:var(--muted);margin-left:2px}
+.mgr .slots{display:flex;gap:3px;margin-top:6px;flex-wrap:wrap}
+.mgr .slot{width:12px;height:12px;border-radius:3px;background:var(--panel-2);border:1px solid var(--line)}
+.mgr .slot.f{background:var(--pitch-bright);border-color:var(--pitch-bright)}
+.mgr .full{position:absolute;top:8px;right:10px;font-family:"Barlow Condensed",sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--pitch-bright)}
+.round{display:flex;justify-content:space-between;align-items:baseline;padding:0 4px;margin-bottom:6px;font-size:13px;color:var(--muted)}
+.card{background:linear-gradient(180deg,var(--panel-2),var(--panel));border:1px solid var(--line);border-radius:18px;padding:18px 16px 14px;position:relative;overflow:hidden;min-height:150px}
+.card::before{content:"";position:absolute;inset:0;background:
+  radial-gradient(circle at 85% 20%, rgba(60,207,127,.12), transparent 45%);pointer-events:none}
+.card .pos{position:absolute;top:12px;right:14px;font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:15px;letter-spacing:.12em;background:var(--night);border:1px solid var(--line);padding:3px 9px;border-radius:8px;color:var(--pitch-bright)}
+.card .flag{font-size:28px;line-height:1;margin-bottom:6px}
+.card .name{font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:38px;line-height:.95;margin:0 0 6px;text-wrap:balance;max-width:85%}
+.card .sub{color:var(--chalk-2);font-size:15px}
+.card .sub b{color:var(--chalk);font-weight:600}
+.card .hidden-val{margin-top:10px;font-family:"Barlow Condensed",sans-serif;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.card .hidden-val i{font-style:normal;color:var(--amber);letter-spacing:.2em}
+.card.pop{animation:pop .35s ease-out}
+@keyframes pop{from{transform:translateY(10px) scale(.98);opacity:0}to{transform:none;opacity:1}}
+.bidbox{display:flex;align-items:flex-end;justify-content:space-between;padding:12px 6px 6px}
+.bidbox .cur{font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:44px;line-height:1;color:var(--amber);font-variant-numeric:tabular-nums}
+.bidbox .cur small{font-size:16px;color:var(--amber-deep);margin-left:3px}
+.bidbox .who{font-size:13px;color:var(--muted);text-align:right}
+.bidbox .who b{display:block;font-family:"Barlow Condensed",sans-serif;font-size:18px;font-weight:700;color:var(--chalk);letter-spacing:.03em}
+.prompt{text-align:center;font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:17px;letter-spacing:.04em;color:var(--chalk-2);padding:4px 0 8px;min-height:30px}
+.prompt .think{color:var(--amber)}
+.acts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.acts button{background:var(--pitch);border:1px solid var(--pitch-bright);color:#fff;border-radius:12px;padding:14px 4px;font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:22px;line-height:1;font-variant-numeric:tabular-nums}
+.acts button small{display:block;font-size:12px;font-weight:600;opacity:.8;margin-top:3px;letter-spacing:.06em}
+.acts button:disabled{opacity:.35;cursor:not-allowed}
+.acts button:hover:not(:disabled){background:#25945a}
+.pass{width:100%;margin-top:8px;background:transparent;border:1px solid var(--line);color:var(--chalk-2);border-radius:12px;padding:13px;font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:20px;letter-spacing:.06em;text-transform:uppercase}
+.pass:hover:not(:disabled){border-color:var(--danger);color:var(--danger)}
+.pass:disabled{opacity:.35;cursor:not-allowed}
+.pass.solo{background:var(--pitch);border-color:var(--pitch-bright);color:#fff}
+.maxnote{text-align:center;font-size:12px;color:var(--muted);margin-top:8px}
+.log{margin-top:14px;border-top:1px solid var(--line);padding-top:8px;font-size:13px;color:var(--chalk-2);max-height:120px;overflow:auto}
+.log div{padding:2px 0}
+.log .s{color:var(--pitch-bright)}.log .d{color:var(--muted)}
+/* reveal */
+.reveal h2{font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:34px;margin:8px 0 2px;text-align:center;text-transform:uppercase;letter-spacing:.04em}
+.reveal .sub{text-align:center;color:var(--muted);margin:0 0 12px;font-size:14px}
+.teams{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.team{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px;transition:border-color .3s}
+.team.win{border-color:var(--amber);box-shadow:0 0 0 2px rgba(245,166,35,.25)}
+.team .tn{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:17px;display:flex;align-items:center;gap:6px;letter-spacing:.03em}
+.team .tt{font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:34px;line-height:1;margin:4px 0 8px;font-variant-numeric:tabular-nums;color:var(--amber)}
+.team .tt small{font-size:13px;color:var(--muted);margin-left:2px}
+.row{display:flex;justify-content:space-between;gap:6px;font-size:13px;padding:5px 0;border-top:1px solid var(--line)}
+.row .pn{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row .pn small{color:var(--muted)}
+.row .pv{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:16px;font-variant-numeric:tabular-nums;opacity:0;transform:translateY(4px);transition:opacity .3s,transform .3s;white-space:nowrap}
+.row .pv.show{opacity:1;transform:none}
+.row .pv.good{color:var(--pitch-bright)}.row .pv.bad{color:var(--danger)}
+.verdict{text-align:center;margin:16px 0 8px;min-height:64px}
+.verdict .w{font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:36px;letter-spacing:.04em;text-transform:uppercase;color:var(--amber);opacity:0;transition:opacity .4s}
+.verdict .w.show{opacity:1}
+.verdict .why{color:var(--chalk-2);font-size:14px;margin-top:2px}
+.btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:auto;padding-top:12px}
+.btns .cta{margin:0;font-size:20px;padding:14px}
+.btns .ghost{border-radius:14px;font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:20px;letter-spacing:.06em;text-transform:uppercase}
+/* overlay */
+.overlay{position:fixed;inset:0;background:rgba(6,12,9,.88);display:none;align-items:center;justify-content:center;padding:24px;z-index:20}
+.overlay.on{display:flex}
+.overlay .box{max-width:400px;width:100%;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:22px 20px;text-align:center}
+.overlay .box h3{font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:32px;margin:0 0 6px;text-transform:uppercase;letter-spacing:.04em}
+.overlay .box p{color:var(--chalk-2);margin:0 0 16px}
+.overlay .box .cta{font-size:20px;padding:13px}
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);background:var(--chalk);color:var(--night);padding:10px 16px;border-radius:999px;font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:18px;letter-spacing:.03em;opacity:0;transition:opacity .25s,transform .25s;z-index:30;pointer-events:none;white-space:nowrap}
+.toast.on{opacity:1;transform:translateX(-50%)}
+.toast.sold{background:var(--amber)}
+/* rules modal */
+.rules .box{text-align:left;max-height:85vh;overflow:auto}
+.rules h3{text-align:center}
+.rules ol{padding-left:20px;margin:0 0 14px;color:var(--chalk-2);font-size:15px}
+.rules li{margin-bottom:8px}
+.rules li b{color:var(--chalk)}
+@media (prefers-reduced-motion: reduce){.card.pop{animation:none}.row .pv,.verdict .w,.toast{transition:none}}
+/* lobby */
+.lobby{display:none}
+.lobby.on{display:block}
+.code{font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:56px;letter-spacing:.3em;text-align:center;color:var(--amber);padding:6px 0 2px;font-variant-numeric:tabular-nums}
+.codein{width:100%;background:var(--panel-2);border:1px solid var(--line);color:var(--chalk);border-radius:10px;padding:12px;font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:28px;letter-spacing:.3em;text-align:center;text-transform:uppercase}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.two .ghost{border-radius:12px;padding:12px;font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:18px;letter-spacing:.04em}
+.status{font-size:14px;color:var(--chalk-2);text-align:center;margin:8px 0 0;min-height:20px}
+.status.err{color:var(--danger)}
+.status.ok{color:var(--pitch-bright)}
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="top">
+    <h1 class="logo">Mercato <span>Duel</span></h1>
+    <button class="ghost" id="btnRules">Règles</button>
+  </div>
+
+  <!-- HOME -->
+  <section id="home" class="on">
+    <div class="hero">
+      <p class="eyebrow">Prototype en ligne · règles v0.4</p>
+      <h2>Deux managers, un budget, un footballeur par tour.</h2>
+      <p>Enchérissez, bluffez, complétez votre équipe. À la fin, les valeurs marchandes sont révélées : l'équipe la plus chère gagne.</p>
+    </div>
+    <div class="strip" id="meStrip"><div class="who"><b id="meName"></b><span id="meInfo"></span></div><button class="ghost" id="btnRank">Classement</button></div>
+    <div class="field">
+      <label class="lbl">Adversaire</label>
+      <div class="seg" id="segMode">
+        <button data-v="ai" aria-pressed="true">Ordinateur</button>
+        <button data-v="hot" aria-pressed="false">Même tél.</button>
+        <button data-v="online" aria-pressed="false">En ligne</button>
+      </div>
+    </div>
+    <div class="field">
+      <label class="lbl">Budget de départ (X)</label>
+      <div class="seg" id="segBudget">
+        <button data-v="50" aria-pressed="false">50 M€</button>
+        <button data-v="100" aria-pressed="true">100 M€</button>
+        <button data-v="200" aria-pressed="false">200 M€</button>
+        <button data-v="500" aria-pressed="false">500 M€</button>
+      </div>
+    </div>
+    <div class="field">
+      <label class="lbl">Taille d'équipe (Y)</label>
+      <div class="seg" id="segSize">
+        <button data-v="3" aria-pressed="false">3</button>
+        <button data-v="5" aria-pressed="true">5</button>
+        <button data-v="7" aria-pressed="false">7</button>
+        <button data-v="11" aria-pressed="false">11</button>
+      </div>
+      <p class="hint" id="hintEco"></p>
+    </div>
+    <div class="field">
+      <label class="lbl">Base de joueurs (tirage)</label>
+      <div class="seg" id="segPool">
+        <button data-v="all" aria-pressed="true">Tous</button>
+        <button data-v="lg" aria-pressed="false">Ligue</button>
+        <button data-v="nat" aria-pressed="false">Pays</button>
+        <button data-v="club" aria-pressed="false">Club</button>
+      </div>
+      <select id="poolSel" class="poolsel" style="display:none"></select>
+      <p class="hint" id="hintPool"></p>
+    </div>
+    <div class="field">
+      <label class="lbl">Managers</label>
+      <div class="names">
+        <input id="n1" maxlength="14" value="Toi" aria-label="Nom du manager 1">
+        <input id="n2" maxlength="14" value="Ordinateur" aria-label="Nom du manager 2">
+      </div>
+    </div>
+    <div class="field">
+      <label class="lbl">Carte joueur</label>
+      <div class="seg" id="segCard">
+        <button data-v="0" aria-pressed="true">Complète</button>
+        <button data-v="1" aria-pressed="false">Expert · nom seul</button>
+      </div>
+      <p class="hint">En mode expert, seul le nom du footballeur est affiché : ni club, ni poste, ni âge, ni nationalité.</p>
+    </div>
+    <div class="field" id="fieldTimer">
+      <label class="lbl">Chrono par enchère (en ligne)</label>
+      <div class="seg" id="segTimer">
+        <button data-v="10" aria-pressed="true">10 s</button>
+        <button data-v="20" aria-pressed="false">20 s</button>
+        <button data-v="0" aria-pressed="false">Sans</button>
+      </div>
+      <p class="hint">Temps écoulé : l'ouverture obligatoire est faite au minimum, sinon le footballeur est laissé à l'adversaire.</p>
+    </div>
+    <div class="field" id="fieldAI">
+      <label class="lbl">Niveau de l'ordinateur</label>
+      <div class="seg" id="segLevel">
+        <button data-v="1" aria-pressed="false">Amateur</button>
+        <button data-v="2" aria-pressed="true">Pro</button>
+        <button data-v="3" aria-pressed="false">Légende</button>
+      </div>
+    </div>
+    <div class="field lobby" id="lobby">
+      <label class="lbl">Salon en ligne</label>
+      <div id="lobbyIdle">
+        <div class="two">
+          <button class="ghost" id="btnHost">Créer un salon</button>
+          <button class="ghost" id="btnJoinUI">Rejoindre</button>
+        </div>
+        <div id="joinBox" style="display:none;margin-top:8px">
+          <input class="codein" id="codeIn" maxlength="4" placeholder="CODE" autocapitalize="characters" autocomplete="off" aria-label="Code du salon">
+          <button class="cta" id="btnJoin" style="margin-top:8px;font-size:20px;padding:13px">Rejoindre le salon</button>
+        </div>
+      </div>
+      <div id="lobbyHost" style="display:none">
+        <p class="hint" style="text-align:center">Donne ce code à ton ami :</p>
+        <div class="code" id="codeOut">····</div>
+      </div>
+      <p class="status" id="netStatus"></p>
+    </div>
+    <button class="cta" id="btnStart">Lancer la partie</button>
+  </section>
+
+  <!-- GAME -->
+  <section id="game">
+    <div class="board" id="board"></div>
+    <div class="round"><span id="roundLbl"></span><span id="poolLbl"></span></div>
+    <div class="card" id="card"></div>
+    <div class="bidbox">
+      <div><p class="eyebrow">Mise en cours</p><div class="cur" id="curBid">—</div></div>
+      <div class="who" id="curWho"></div>
+    </div>
+    <div class="prompt" id="prompt"><span id="tlbl" class="tlbl"></span></div>
+    <div class="tbar" id="tbar" style="display:none"><i></i></div>
+    <div class="acts" id="acts">
+      <button id="b1"></button><button id="b2"></button><button id="b3"></button>
+    </div>
+    <button class="pass" id="btnPass">Passer</button>
+    <p class="maxnote" id="maxnote"></p>
+    <div class="log" id="log"></div>
+  </section>
+
+  <!-- REVEAL -->
+  <section id="reveal" class="reveal">
+    <h2>Révélation</h2>
+    <p class="sub">Les valeurs marchandes se dévoilent une à une.</p>
+    <div class="teams" id="teams"></div>
+    <div class="verdict" id="verdict"><div class="w" id="winner"></div><div class="why" id="why"></div></div>
+    <div id="ratingBox"></div>
+
+    <div class="btns">
+      <button class="ghost" id="btnHome">Réglages</button>
+      <button class="cta" id="btnAgain">Rejouer</button>
+    </div>
+    <p class="status" id="againStatus"></p>
+  </section>
+
+  <!-- CLASSEMENT -->
+  <section id="rank" class="rank">
+    <h2 id="rankTitle">Classement</h2>
+    <div class="seg" id="segRank">
+      <button data-v="g" aria-pressed="true">Global</button>
+      <button data-v="lg" aria-pressed="false">Ligue</button>
+      <button data-v="nat" aria-pressed="false">Pays</button>
+      <button data-v="club" aria-pressed="false">Club</button>
+    </div>
+    <select id="rankSel" class="poolsel" style="display:none;margin-top:0"></select>
+    <div id="rankTable"></div>
+    <p class="hint" style="text-align:center;margin-top:10px" id="rankStatus"></p>
+    <div id="recent"></div>
+    <h2 style="margin-top:18px;font-size:22px" id="recTitle">Mes records</h2>
+    <div class="records" id="records"></div>
+    <div class="hist" id="hist"></div>
+    <div class="btns"><button class="ghost" id="btnRankBack">Retour</button><button class="cta" id="btnRankPlay">Jouer</button></div>
+  </section>
+
+</div>
+
+<div class="overlay" id="handoff"><div class="box"><h3 id="hoName"></h3><p id="hoMsg">Passe le téléphone.</p><button class="cta" id="hoBtn">C'est moi, je joue</button></div></div>
+<div class="overlay rules" id="rulesModal"><div class="box">
+  <h3>Règles</h3>
+  <ol>
+    <li><b>Même budget</b> pour les deux managers, même nombre de places dans l'équipe.</li>
+    <li>À chaque tour, un footballeur est tiré au hasard. <b>Sa valeur marchande est cachée.</b> Le premier à parler alterne à chaque tour.</li>
+    <li><b>Chaque footballeur tiré est vendu.</b> Le premier à parler est obligé d'ouvrir (au minimum la mise de base). Ensuite, chacun son tour : <b>surenchérir</b> (+1 %, +5 % ou +10 % du budget de départ) ou <b>laisser</b> le footballeur à l'autre au prix de sa dernière mise.</li>
+    <li>Tu ne peux jamais miser plus que ce qui te laisse de quoi remplir tes places restantes au prix minimum.</li>
+    <li>Quand une équipe est complète, l'autre manager achète les tirages suivants <b>au prix minimum</b>, sans concurrence, jusqu'à être complet lui aussi. Garder de l'argent pour la fin fait partie de la stratégie.</li>
+    <li>Deux équipes complètes : on révèle les valeurs. <b>La somme la plus haute gagne.</b> Égalité : budget restant, puis footballeur le plus cher.</li>
+  </ol>
+  <p style="font-size:13px;color:var(--muted);margin:0 0 12px">Base de démonstration : environ 600 joueurs (saison 2025-26), valeurs indicatives en millions d'euros, à remplacer par une source officielle.</p>
+  <button class="cta" id="btnCloseRules">Compris</button>
+</div></div>
+<div class="overlay" id="lost"><div class="box"><h3>Connexion perdue</h3><p id="lostMsg">Ton adversaire s'est déconnecté.</p><button class="cta" id="lostBtn">Retour aux réglages</button></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ---------- Ligue privée : renseigner l'URL et la clé anon du projet Supabase ----------
+const LEAGUE={url:"https://ugbsxjojzbecgspckodl.supabase.co",key:"sb_publishable_YPEoWh9lThVGHParD89SjQ_O95F2eq-",code:"amis",name:"Ligue des amis"};
+// ---------- Base de démonstration (saison 2025-26, valeurs indicatives en M€, à remplacer par une source officielle) ----------
+const FLAG={FRA:"🇫🇷",ESP:"🇪🇸",ENG:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",BRA:"🇧🇷",ARG:"🇦🇷",POR:"🇵🇹",GER:"🇩🇪",NOR:"🇳🇴",NED:"🇳🇱",BEL:"🇧🇪",ITA:"🇮🇹",URU:"🇺🇾",EGY:"🇪🇬",SWE:"🇸🇪",GEO:"🇬🇪",MAR:"🇲🇦",NGA:"🇳🇬",POL:"🇵🇱",CRO:"🇭🇷",CAN:"🇨🇦",ECU:"🇪🇨",SVN:"🇸🇮",TUR:"🇹🇷",KOR:"🇰🇷",SEN:"🇸🇳",DEN:"🇩🇰",SCO:"🏴󠁧󠁢󠁳󠁣󠁴󠁿",COL:"🇨🇴",JPN:"🇯🇵",USA:"🇺🇸",ALG:"🇩🇿",CIV:"🇨🇮",AUT:"🇦🇹",HUN:"🇭🇺",SUI:"🇨🇭",UKR:"🇺🇦",SVK:"🇸🇰",CZE:"🇨🇿",SRB:"🇷🇸",MNE:"🇲🇪",ISR:"🇮🇱",AUS:"🇦🇺",UZB:"🇺🇿",KOS:"🇽🇰",ROU:"🇷🇴",IRL:"🇮🇪",WAL:"🏴󠁧󠁢󠁷󠁬󠁳󠁿",VEN:"🇻🇪",PAR:"🇵🇾",CHI:"🇨🇱",MEX:"🇲🇽",GRE:"🇬🇷",GHA:"🇬🇭",MLI:"🇲🇱",CMR:"🇨🇲",BFA:"🇧🇫",JAM:"🇯🇲",ISL:"🇮🇸",ARM:"🇦🇲",FIN:"🇫🇮",BIH:"🇧🇦",COD:"🇨🇩",GUI:"🇬🇳",TUN:"🇹🇳",ZAM:"🇿🇲",GAB:"🇬🇦",NZL:"🇳🇿",PER:"🇵🇪",RSA:"🇿🇦",BUL:"🇧🇬",MKD:"🇲🇰",RUS:"🇷🇺",CAF:"🇨🇫",ANG:"🇦🇴",NIR:"🇬🇧"};
+const LEAGUES={L1:"Ligue 1",PL:"Premier League",LIGA:"Liga espagnole",SA:"Serie A",BUN:"Bundesliga",SPL:"Saudi Pro League",OTH:"Autres championnats"};
+const NATS={FRA:"France",ESP:"Espagne",ENG:"Angleterre",BRA:"Brésil",ARG:"Argentine",POR:"Portugal",GER:"Allemagne",NOR:"Norvège",NED:"Pays-Bas",BEL:"Belgique",ITA:"Italie",URU:"Uruguay",EGY:"Égypte",SWE:"Suède",GEO:"Géorgie",MAR:"Maroc",NGA:"Nigeria",POL:"Pologne",CRO:"Croatie",CAN:"Canada",ECU:"Équateur",SVN:"Slovénie",TUR:"Turquie",KOR:"Corée du Sud",SEN:"Sénégal",DEN:"Danemark",SCO:"Écosse",COL:"Colombie",JPN:"Japon",USA:"États-Unis",ALG:"Algérie",CIV:"Côte d'Ivoire",AUT:"Autriche",HUN:"Hongrie",SUI:"Suisse",UKR:"Ukraine",SVK:"Slovaquie",CZE:"Tchéquie",SRB:"Serbie",MNE:"Monténégro",ISR:"Israël",AUS:"Australie",UZB:"Ouzbékistan",KOS:"Kosovo",ROU:"Roumanie",IRL:"Irlande",WAL:"Pays de Galles",VEN:"Venezuela",PAR:"Paraguay",CHI:"Chili",MEX:"Mexique",GRE:"Grèce",GHA:"Ghana",MLI:"Mali",CMR:"Cameroun",BFA:"Burkina Faso",JAM:"Jamaïque",ISL:"Islande",ARM:"Arménie",FIN:"Finlande",BIH:"Bosnie",COD:"RD Congo",GUI:"Guinée",TUN:"Tunisie",ZAM:"Zambie",GAB:"Gabon",NZL:"Nouvelle-Zélande",PER:"Pérou",RSA:"Afrique du Sud",BUL:"Bulgarie",MKD:"Macédoine du Nord",RUS:"Russie",CAF:"Centrafrique",ANG:"Angola",NIR:"Irlande du Nord"};
+const CLUBS={"Paris SG":"L1","Marseille":"L1","Monaco":"L1","Lyon":"L1","Lille":"L1","Strasbourg":"L1","Rennes":"L1","Nice":"L1","Lens":"L1",
+"Manchester City":"PL","Liverpool":"PL","Arsenal":"PL","Chelsea":"PL","Manchester United":"PL","Tottenham":"PL","Newcastle":"PL","Aston Villa":"PL","Crystal Palace":"PL","Bournemouth":"PL","Brighton":"PL","Nottingham Forest":"PL","West Ham":"PL","Everton":"PL","Brentford":"PL","Sunderland":"PL",
+"Real Madrid":"LIGA","FC Barcelone":"LIGA","Atlético Madrid":"LIGA","Athletic Bilbao":"LIGA","Real Sociedad":"LIGA","Villarreal":"LIGA","Betis Séville":"LIGA","Getafe":"LIGA","Celta Vigo":"LIGA",
+"Inter Milan":"SA","AC Milan":"SA","Juventus":"SA","Napoli":"SA","Atalanta":"SA","AS Roma":"SA","Lazio":"SA","Fiorentina":"SA","Bologne":"SA","Côme":"SA",
+"Bayern Munich":"BUN","Borussia Dortmund":"BUN","Bayer Leverkusen":"BUN","RB Leipzig":"BUN","Eintracht Francfort":"BUN","Stuttgart":"BUN","Wolfsburg":"BUN",
+"Al-Nassr":"SPL","Al-Hilal":"SPL","Al-Ittihad":"SPL","Al-Ahli":"SPL",
+"Inter Miami":"OTH","Los Angeles FC":"OTH","Santos":"OTH","Galatasaray":"OTH","Fenerbahçe":"OTH","FC Porto":"OTH","Benfica":"OTH","Sporting":"OTH","PSV Eindhoven":"OTH","Ajax":"OTH","Feyenoord":"OTH","Celtic":"OTH","Utrecht":"OTH","Vancouver":"OTH"};
+const RAW=`
+Lucas Chevalier|GB|Paris SG|FRA|24|40
+Matvey Safonov|GB|Paris SG|RUS|27|15
+Achraf Hakimi|DEF|Paris SG|MAR|27|70
+Marquinhos|DEF|Paris SG|BRA|32|35
+Willian Pacho|DEF|Paris SG|ECU|24|55
+Illya Zabarnyi|DEF|Paris SG|UKR|23|55
+Lucas Beraldo|DEF|Paris SG|BRA|22|25
+Nuno Mendes|DEF|Paris SG|POR|24|70
+Lucas Hernández|DEF|Paris SG|FRA|30|20
+Presnel Kimpembe|DEF|Paris SG|FRA|31|5
+Vitinha|MIL|Paris SG|POR|26|90
+João Neves|MIL|Paris SG|POR|22|80
+Fabián Ruiz|MIL|Paris SG|ESP|30|45
+Warren Zaïre-Emery|MIL|Paris SG|FRA|20|50
+Lee Kang-in|MIL|Paris SG|KOR|25|30
+Senny Mayulu|MIL|Paris SG|FRA|20|20
+Ousmane Dembélé|AIL|Paris SG|FRA|29|90
+Désiré Doué|AIL|Paris SG|FRA|21|90
+Bradley Barcola|AIL|Paris SG|FRA|24|80
+Khvicha Kvaratskhelia|AIL|Paris SG|GEO|25|80
+Ibrahim Mbaye|AIL|Paris SG|FRA|18|15
+Gonçalo Ramos|ATT|Paris SG|POR|25|40
+Gerónimo Rulli|GB|Marseille|ARG|34|12
+Leonardo Balerdi|DEF|Marseille|ARG|27|30
+Benjamin Pavard|DEF|Marseille|FRA|30|15
+Facundo Medina|DEF|Marseille|ARG|27|15
+Nayef Aguerd|DEF|Marseille|MAR|30|15
+Emerson Palmieri|DEF|Marseille|ITA|32|8
+Timothy Weah|DEF|Marseille|USA|26|15
+Pierre-Emile Højbjerg|MIL|Marseille|DEN|31|20
+Geoffrey Kondogbia|MIL|Marseille|CAF|33|5
+Matt O'Riley|MIL|Marseille|DEN|25|20
+Arthur Vermeeren|MIL|Marseille|BEL|21|20
+Angel Gomes|MIL|Marseille|ENG|26|15
+Bilal Nadir|MIL|Marseille|MAR|22|5
+Mason Greenwood|AIL|Marseille|ENG|24|50
+Igor Paixão|AIL|Marseille|BRA|26|30
+Amine Gouiri|ATT|Marseille|ALG|26|30
+Pierre-Emerick Aubameyang|ATT|Marseille|GAB|37|4
+Maghnes Akliouche|MIL|Monaco|FRA|24|45
+Denis Zakaria|MIL|Monaco|SUI|29|30
+Aleksandr Golovin|MIL|Monaco|RUS|30|15
+Lamine Camara|MIL|Monaco|SEN|22|20
+Paul Pogba|MIL|Monaco|FRA|33|5
+Takumi Minamino|AIL|Monaco|JPN|31|12
+Ansu Fati|AIL|Monaco|ESP|23|10
+Folarin Balogun|ATT|Monaco|USA|25|25
+Mika Biereth|ATT|Monaco|DEN|23|25
+Vanderson|DEF|Monaco|BRA|25|25
+Caio Henrique|DEF|Monaco|BRA|29|15
+Thilo Kehrer|DEF|Monaco|GER|29|10
+Eric Dier|DEF|Monaco|ENG|32|8
+Philipp Köhn|GB|Monaco|SUI|28|8
+Malick Fofana|AIL|Lyon|BEL|21|35
+Corentin Tolisso|MIL|Lyon|FRA|32|8
+Tanner Tessmann|MIL|Lyon|USA|24|15
+Pavel Šulc|MIL|Lyon|CZE|25|15
+Moussa Niakhaté|DEF|Lyon|SEN|30|15
+Nicolás Tagliafico|DEF|Lyon|ARG|33|6
+Clinton Mata|DEF|Lyon|ANG|33|10
+Dominik Greif|GB|Lyon|SVK|29|8
+Olivier Giroud|ATT|Lille|FRA|39|2
+Hákon Haraldsson|MIL|Lille|ISL|23|25
+Benjamin André|MIL|Lille|FRA|35|5
+Ayyoub Bouaddi|MIL|Lille|FRA|18|25
+Alexsandro|DEF|Lille|BRA|26|25
+Aïssa Mandi|DEF|Lille|ALG|34|3
+Matias Fernandez-Pardo|AIL|Lille|BEL|21|15
+Berke Özer|GB|Lille|TUR|26|10
+Emanuel Emegha|ATT|Strasbourg|NED|23|25
+Guéla Doué|DEF|Strasbourg|FRA|23|20
+Joaquín Panichelli|ATT|Strasbourg|ARG|23|20
+Valentin Barco|DEF|Strasbourg|ARG|22|15
+Ludovic Blas|MIL|Rennes|FRA|28|8
+Jérémy Jacquet|DEF|Rennes|FRA|20|20
+Brice Samba|GB|Rennes|FRA|32|8
+Jérémie Boga|AIL|Nice|CIV|29|6
+Jonathan Clauss|DEF|Nice|FRA|33|5
+Florian Thauvin|AIL|Lens|FRA|33|6
+Gianluigi Donnarumma|GB|Manchester City|ITA|27|50
+James Trafford|GB|Manchester City|ENG|23|25
+Rúben Dias|DEF|Manchester City|POR|29|70
+Joško Gvardiol|DEF|Manchester City|CRO|24|80
+Nathan Aké|DEF|Manchester City|NED|31|25
+John Stones|DEF|Manchester City|ENG|32|25
+Abdukodir Khusanov|DEF|Manchester City|UZB|22|30
+Rayan Aït-Nouri|DEF|Manchester City|ALG|25|40
+Matheus Nunes|DEF|Manchester City|POR|27|25
+Rico Lewis|DEF|Manchester City|ENG|21|25
+Rodri|MIL|Manchester City|ESP|30|110
+Tijjani Reijnders|MIL|Manchester City|NED|27|70
+Nico González|MIL|Manchester City|ESP|24|40
+Bernardo Silva|MIL|Manchester City|POR|32|35
+Phil Foden|MIL|Manchester City|ENG|26|110
+Rayan Cherki|MIL|Manchester City|FRA|23|50
+Mateo Kovačić|MIL|Manchester City|CRO|32|20
+Jérémy Doku|AIL|Manchester City|BEL|24|60
+Savinho|AIL|Manchester City|BRA|22|50
+Oscar Bobb|AIL|Manchester City|NOR|23|25
+Erling Haaland|ATT|Manchester City|NOR|26|180
+Omar Marmoush|ATT|Manchester City|EGY|27|60
+Alisson|GB|Liverpool|BRA|33|20
+Giorgi Mamardashvili|GB|Liverpool|GEO|25|25
+Virgil van Dijk|DEF|Liverpool|NED|35|25
+Ibrahima Konaté|DEF|Liverpool|FRA|27|50
+Milos Kerkez|DEF|Liverpool|HUN|22|45
+Jeremie Frimpong|DEF|Liverpool|NED|25|35
+Conor Bradley|DEF|Liverpool|NIR|23|30
+Andrew Robertson|DEF|Liverpool|SCO|32|8
+Joe Gomez|DEF|Liverpool|ENG|29|12
+Giovanni Leoni|DEF|Liverpool|ITA|19|25
+Ryan Gravenberch|MIL|Liverpool|NED|24|85
+Alexis Mac Allister|MIL|Liverpool|ARG|27|90
+Dominik Szoboszlai|MIL|Liverpool|HUN|25|80
+Florian Wirtz|MIL|Liverpool|GER|23|140
+Curtis Jones|MIL|Liverpool|ENG|25|40
+Wataru Endo|MIL|Liverpool|JPN|33|5
+Mohamed Salah|AIL|Liverpool|EGY|34|50
+Cody Gakpo|AIL|Liverpool|NED|27|65
+Federico Chiesa|AIL|Liverpool|ITA|28|10
+Rio Ngumoha|AIL|Liverpool|ENG|18|15
+Alexander Isak|ATT|Liverpool|SWE|26|120
+Hugo Ekitiké|ATT|Liverpool|FRA|24|80
+David Raya|GB|Arsenal|ESP|31|35
+Kepa Arrizabalaga|GB|Arsenal|ESP|31|5
+William Saliba|DEF|Arsenal|FRA|25|90
+Gabriel Magalhães|DEF|Arsenal|BRA|28|75
+Jurriën Timber|DEF|Arsenal|NED|25|60
+Ben White|DEF|Arsenal|ENG|28|30
+Riccardo Calafiori|DEF|Arsenal|ITA|24|40
+Cristhian Mosquera|DEF|Arsenal|ESP|22|20
+Myles Lewis-Skelly|DEF|Arsenal|ENG|19|40
+Piero Hincapié|DEF|Arsenal|ECU|24|35
+Martín Zubimendi|MIL|Arsenal|ESP|27|65
+Declan Rice|MIL|Arsenal|ENG|27|110
+Martin Ødegaard|MIL|Arsenal|NOR|27|80
+Christian Nørgaard|MIL|Arsenal|DEN|32|15
+Kai Havertz|MIL|Arsenal|GER|26|45
+Mikel Merino|MIL|Arsenal|ESP|30|40
+Ethan Nwaneri|MIL|Arsenal|ENG|19|40
+Bukayo Saka|AIL|Arsenal|ENG|24|140
+Noni Madueke|AIL|Arsenal|ENG|24|45
+Gabriel Martinelli|AIL|Arsenal|BRA|24|45
+Leandro Trossard|AIL|Arsenal|BEL|31|25
+Eberechi Eze|AIL|Arsenal|ENG|28|60
+Viktor Gyökeres|ATT|Arsenal|SWE|28|75
+Robert Sánchez|GB|Chelsea|ESP|28|20
+Filip Jörgensen|GB|Chelsea|DEN|24|15
+Marc Cucurella|DEF|Chelsea|ESP|27|50
+Trevoh Chalobah|DEF|Chelsea|ENG|26|30
+Levi Colwill|DEF|Chelsea|ENG|23|45
+Wesley Fofana|DEF|Chelsea|FRA|25|35
+Benoît Badiashile|DEF|Chelsea|FRA|25|20
+Reece James|DEF|Chelsea|ENG|26|35
+Malo Gusto|DEF|Chelsea|FRA|23|40
+Moisés Caicedo|MIL|Chelsea|ECU|24|100
+Enzo Fernández|MIL|Chelsea|ARG|25|80
+Roméo Lavia|MIL|Chelsea|BEL|22|30
+Andrey Santos|MIL|Chelsea|BRA|22|20
+Cole Palmer|MIL|Chelsea|ENG|24|130
+Pedro Neto|AIL|Chelsea|POR|26|50
+Estêvão|AIL|Chelsea|BRA|19|60
+Alejandro Garnacho|AIL|Chelsea|ARG|22|40
+Jamie Gittens|AIL|Chelsea|ENG|22|40
+João Pedro|ATT|Chelsea|BRA|24|55
+Liam Delap|ATT|Chelsea|ENG|23|40
+Marc Guiu|ATT|Chelsea|ESP|20|8
+Senne Lammens|GB|Manchester United|BEL|24|15
+Altay Bayındır|GB|Manchester United|TUR|28|10
+Leny Yoro|DEF|Manchester United|FRA|20|55
+Matthijs de Ligt|DEF|Manchester United|NED|27|30
+Harry Maguire|DEF|Manchester United|ENG|33|8
+Luke Shaw|DEF|Manchester United|ENG|31|10
+Noussair Mazraoui|DEF|Manchester United|MAR|28|20
+Patrick Dorgu|DEF|Manchester United|DEN|21|20
+Diogo Dalot|DEF|Manchester United|POR|27|20
+Bruno Fernandes|MIL|Manchester United|POR|32|40
+Casemiro|MIL|Manchester United|BRA|34|8
+Kobbie Mainoo|MIL|Manchester United|ENG|21|40
+Manuel Ugarte|MIL|Manchester United|URU|25|30
+Mason Mount|MIL|Manchester United|ENG|27|25
+Amad Diallo|AIL|Manchester United|CIV|24|45
+Matheus Cunha|AIL|Manchester United|BRA|27|60
+Bryan Mbeumo|AIL|Manchester United|CMR|27|60
+Benjamin Šeško|ATT|Manchester United|SVN|23|70
+Joshua Zirkzee|ATT|Manchester United|NED|25|25
+Guglielmo Vicario|GB|Tottenham|ITA|29|25
+Cristian Romero|DEF|Tottenham|ARG|28|45
+Micky van de Ven|DEF|Tottenham|NED|25|55
+Pedro Porro|DEF|Tottenham|ESP|27|40
+Destiny Udogie|DEF|Tottenham|ITA|23|30
+Djed Spence|DEF|Tottenham|ENG|26|20
+João Palhinha|MIL|Tottenham|POR|31|20
+Rodrigo Bentancur|MIL|Tottenham|URU|29|20
+Pape Matar Sarr|MIL|Tottenham|SEN|24|30
+Lucas Bergvall|MIL|Tottenham|SWE|20|35
+Xavi Simons|MIL|Tottenham|NED|23|60
+Mohammed Kudus|AIL|Tottenham|GHA|26|45
+Brennan Johnson|AIL|Tottenham|WAL|25|40
+Richarlison|ATT|Tottenham|BRA|29|20
+Dominic Solanke|ATT|Tottenham|ENG|29|30
+Randal Kolo Muani|ATT|Tottenham|FRA|27|30
+Mathys Tel|ATT|Tottenham|FRA|21|25
+Wilson Odobert|AIL|Tottenham|FRA|21|15
+Nick Pope|GB|Newcastle|ENG|34|10
+Sven Botman|DEF|Newcastle|NED|26|30
+Dan Burn|DEF|Newcastle|ENG|34|8
+Lewis Hall|DEF|Newcastle|ENG|22|30
+Tino Livramento|DEF|Newcastle|ENG|23|40
+Malick Thiaw|DEF|Newcastle|GER|25|20
+Kieran Trippier|DEF|Newcastle|ENG|36|5
+Bruno Guimarães|MIL|Newcastle|BRA|28|80
+Sandro Tonali|MIL|Newcastle|ITA|26|80
+Joelinton|MIL|Newcastle|BRA|30|30
+Jacob Ramsey|MIL|Newcastle|ENG|25|20
+Anthony Gordon|AIL|Newcastle|ENG|25|60
+Anthony Elanga|AIL|Newcastle|SWE|24|40
+Harvey Barnes|AIL|Newcastle|ENG|28|25
+Nick Woltemade|ATT|Newcastle|GER|24|40
+Emiliano Martínez|GB|Aston Villa|ARG|34|20
+Ezri Konsa|DEF|Aston Villa|ENG|28|30
+Pau Torres|DEF|Aston Villa|ESP|29|30
+Matty Cash|DEF|Aston Villa|POL|29|15
+Lucas Digne|DEF|Aston Villa|FRA|33|8
+Boubacar Kamara|MIL|Aston Villa|FRA|26|30
+Amadou Onana|MIL|Aston Villa|BEL|25|35
+Youri Tielemans|MIL|Aston Villa|BEL|29|30
+John McGinn|MIL|Aston Villa|SCO|31|15
+Morgan Rogers|MIL|Aston Villa|ENG|24|65
+Emiliano Buendía|MIL|Aston Villa|ARG|29|8
+Ollie Watkins|ATT|Aston Villa|ENG|30|50
+Donyell Malen|ATT|Aston Villa|NED|27|20
+Jadon Sancho|AIL|Aston Villa|ENG|26|15
+Jean-Philippe Mateta|ATT|Crystal Palace|FRA|29|30
+Marc Guéhi|DEF|Crystal Palace|ENG|26|40
+Adam Wharton|MIL|Crystal Palace|ENG|22|45
+Tyrick Mitchell|DEF|Crystal Palace|ENG|26|25
+Ismaïla Sarr|AIL|Crystal Palace|SEN|28|25
+Dean Henderson|GB|Crystal Palace|ENG|29|15
+Antoine Semenyo|AIL|Bournemouth|GHA|26|50
+Justin Kluivert|AIL|Bournemouth|NED|27|30
+Alex Scott|MIL|Bournemouth|ENG|22|25
+Carlos Baleba|MIL|Brighton|CMR|22|40
+Kaoru Mitoma|AIL|Brighton|JPN|29|30
+Danny Welbeck|ATT|Brighton|ENG|35|5
+Morgan Gibbs-White|MIL|Nottingham Forest|ENG|26|55
+Callum Hudson-Odoi|AIL|Nottingham Forest|ENG|25|20
+Matz Sels|GB|Nottingham Forest|BEL|34|20
+Lucas Paquetá|MIL|West Ham|BRA|28|25
+Jarrod Bowen|AIL|West Ham|ENG|29|35
+Jack Grealish|AIL|Everton|ENG|30|20
+Kevin Schade|AIL|Brentford|GER|24|30
+Granit Xhaka|MIL|Sunderland|SUI|33|12
+Thibaut Courtois|GB|Real Madrid|BEL|34|15
+Andriy Lunin|GB|Real Madrid|UKR|27|15
+Trent Alexander-Arnold|DEF|Real Madrid|ENG|27|70
+Dani Carvajal|DEF|Real Madrid|ESP|34|10
+Éder Militão|DEF|Real Madrid|BRA|28|30
+Antonio Rüdiger|DEF|Real Madrid|GER|33|15
+Dean Huijsen|DEF|Real Madrid|ESP|21|60
+David Alaba|DEF|Real Madrid|AUT|34|5
+Álvaro Carreras|DEF|Real Madrid|ESP|23|40
+Fran García|DEF|Real Madrid|ESP|27|15
+Ferland Mendy|DEF|Real Madrid|FRA|31|12
+Aurélien Tchouaméni|MIL|Real Madrid|FRA|26|90
+Federico Valverde|MIL|Real Madrid|URU|28|130
+Eduardo Camavinga|MIL|Real Madrid|FRA|23|60
+Jude Bellingham|MIL|Real Madrid|ENG|23|180
+Arda Güler|MIL|Real Madrid|TUR|21|60
+Dani Ceballos|MIL|Real Madrid|ESP|30|8
+Franco Mastantuono|MIL|Real Madrid|ARG|18|45
+Vinícius Júnior|AIL|Real Madrid|BRA|26|150
+Rodrygo|AIL|Real Madrid|BRA|25|90
+Brahim Díaz|AIL|Real Madrid|MAR|27|30
+Kylian Mbappé|ATT|Real Madrid|FRA|27|180
+Gonzalo García|ATT|Real Madrid|ESP|22|15
+Endrick|ATT|Real Madrid|BRA|20|30
+Marc-André ter Stegen|GB|FC Barcelone|GER|34|10
+Joan García|GB|FC Barcelone|ESP|25|30
+Wojciech Szczęsny|GB|FC Barcelone|POL|36|2
+Jules Koundé|DEF|FC Barcelone|FRA|27|65
+Ronald Araújo|DEF|FC Barcelone|URU|27|40
+Pau Cubarsí|DEF|FC Barcelone|ESP|19|80
+Eric García|DEF|FC Barcelone|ESP|25|20
+Gerard Martín|DEF|FC Barcelone|ESP|24|15
+Alejandro Balde|DEF|FC Barcelone|ESP|22|50
+Andreas Christensen|DEF|FC Barcelone|DEN|30|15
+Pedri|MIL|FC Barcelone|ESP|23|140
+Frenkie de Jong|MIL|FC Barcelone|NED|29|45
+Gavi|MIL|FC Barcelone|ESP|22|70
+Marc Casadó|MIL|FC Barcelone|ESP|22|25
+Marc Bernal|MIL|FC Barcelone|ESP|19|15
+Fermín López|MIL|FC Barcelone|ESP|23|45
+Dani Olmo|MIL|FC Barcelone|ESP|28|50
+Lamine Yamal|AIL|FC Barcelone|ESP|19|200
+Raphinha|AIL|FC Barcelone|BRA|29|80
+Marcus Rashford|AIL|FC Barcelone|ENG|28|35
+Roony Bardghji|AIL|FC Barcelone|SWE|20|10
+Robert Lewandowski|ATT|FC Barcelone|POL|38|10
+Ferran Torres|ATT|FC Barcelone|ESP|26|35
+Jan Oblak|GB|Atlético Madrid|SVN|33|15
+Juan Musso|GB|Atlético Madrid|ARG|32|3
+Nahuel Molina|DEF|Atlético Madrid|ARG|28|20
+José María Giménez|DEF|Atlético Madrid|URU|31|15
+Robin Le Normand|DEF|Atlético Madrid|ESP|29|20
+Dávid Hancko|DEF|Atlético Madrid|SVK|28|25
+Clément Lenglet|DEF|Atlético Madrid|FRA|31|5
+Matteo Ruggeri|DEF|Atlético Madrid|ITA|24|20
+Marc Pubill|DEF|Atlético Madrid|ESP|23|10
+Koke|MIL|Atlético Madrid|ESP|34|5
+Pablo Barrios|MIL|Atlético Madrid|ESP|23|60
+Conor Gallagher|MIL|Atlético Madrid|ENG|26|35
+Johnny Cardoso|MIL|Atlético Madrid|USA|24|30
+Marcos Llorente|MIL|Atlético Madrid|ESP|31|20
+Giuliano Simeone|AIL|Atlético Madrid|ARG|23|20
+Thiago Almada|MIL|Atlético Madrid|ARG|25|35
+Álex Baena|MIL|Atlético Madrid|ESP|25|40
+Antoine Griezmann|ATT|Atlético Madrid|FRA|35|15
+Julián Álvarez|ATT|Atlético Madrid|ARG|26|100
+Alexander Sørloth|ATT|Atlético Madrid|NOR|30|25
+Giacomo Raspadori|ATT|Atlético Madrid|ITA|26|20
+Unai Simón|GB|Athletic Bilbao|ESP|29|15
+Dani Vivian|DEF|Athletic Bilbao|ESP|27|30
+Aitor Paredes|DEF|Athletic Bilbao|ESP|26|20
+Beñat Prados|MIL|Athletic Bilbao|ESP|25|15
+Mikel Jauregizar|MIL|Athletic Bilbao|ESP|22|25
+Oihan Sancet|MIL|Athletic Bilbao|ESP|26|40
+Nico Williams|AIL|Athletic Bilbao|ESP|24|70
+Iñaki Williams|AIL|Athletic Bilbao|GHA|32|15
+Gorka Guruzeta|ATT|Athletic Bilbao|ESP|29|15
+Álex Remiro|GB|Real Sociedad|ESP|31|15
+Igor Zubeldia|DEF|Real Sociedad|ESP|29|20
+Takefusa Kubo|AIL|Real Sociedad|JPN|25|50
+Mikel Oyarzabal|ATT|Real Sociedad|ESP|29|25
+Ander Barrenetxea|AIL|Real Sociedad|ESP|24|20
+Orri Óskarsson|ATT|Real Sociedad|ISL|21|15
+Nicolas Pépé|AIL|Villarreal|CIV|31|15
+Georges Mikautadze|ATT|Villarreal|GEO|25|30
+Tajon Buchanan|AIL|Villarreal|CAN|27|15
+Santi Comesaña|MIL|Villarreal|ESP|29|20
+Alberto Moleiro|MIL|Villarreal|ESP|22|20
+Isco|MIL|Betis Séville|ESP|34|5
+Antony|AIL|Betis Séville|BRA|26|30
+Giovani Lo Celso|MIL|Betis Séville|ARG|30|15
+Abde Ezzalzouli|AIL|Betis Séville|MAR|24|20
+Christantus Uche|MIL|Getafe|NGA|23|15
+Iago Aspas|ATT|Celta Vigo|ESP|38|2
+Yann Sommer|GB|Inter Milan|SUI|37|5
+Josep Martínez|GB|Inter Milan|ESP|28|15
+Alessandro Bastoni|DEF|Inter Milan|ITA|27|80
+Yann Bisseck|DEF|Inter Milan|GER|25|30
+Manuel Akanji|DEF|Inter Milan|SUI|30|25
+Francesco Acerbi|DEF|Inter Milan|ITA|38|2
+Stefan de Vrij|DEF|Inter Milan|NED|34|3
+Denzel Dumfries|DEF|Inter Milan|NED|30|40
+Federico Dimarco|DEF|Inter Milan|ITA|28|40
+Carlos Augusto|DEF|Inter Milan|BRA|27|20
+Matteo Darmian|DEF|Inter Milan|ITA|36|2
+Luis Henrique|AIL|Inter Milan|BRA|24|20
+Nicolò Barella|MIL|Inter Milan|ITA|29|80
+Hakan Çalhanoğlu|MIL|Inter Milan|TUR|32|25
+Henrikh Mkhitaryan|MIL|Inter Milan|ARM|37|3
+Piotr Zieliński|MIL|Inter Milan|POL|32|10
+Petar Sučić|MIL|Inter Milan|CRO|22|25
+Davide Frattesi|MIL|Inter Milan|ITA|26|25
+Lautaro Martínez|ATT|Inter Milan|ARG|29|95
+Marcus Thuram|ATT|Inter Milan|FRA|29|60
+Ange-Yoan Bonny|ATT|Inter Milan|FRA|22|20
+Pio Esposito|ATT|Inter Milan|ITA|21|25
+Mike Maignan|GB|AC Milan|FRA|31|25
+Pietro Terracciano|GB|AC Milan|ITA|36|2
+Fikayo Tomori|DEF|AC Milan|ENG|28|25
+Matteo Gabbia|DEF|AC Milan|ITA|26|15
+Strahinja Pavlović|DEF|AC Milan|SRB|25|25
+Koni De Winter|DEF|AC Milan|BEL|24|15
+Alexis Saelemaekers|DEF|AC Milan|BEL|27|20
+Davide Bartesaghi|DEF|AC Milan|ITA|20|10
+Pervis Estupiñán|DEF|AC Milan|ECU|28|15
+Zachary Athekame|DEF|AC Milan|SUI|21|10
+Luka Modrić|MIL|AC Milan|CRO|40|3
+Adrien Rabiot|MIL|AC Milan|FRA|31|20
+Youssouf Fofana|MIL|AC Milan|FRA|27|30
+Ruben Loftus-Cheek|MIL|AC Milan|ENG|30|15
+Samuele Ricci|MIL|AC Milan|ITA|25|25
+Ardon Jashari|MIL|AC Milan|SUI|24|30
+Rafael Leão|AIL|AC Milan|POR|27|75
+Christian Pulisic|AIL|AC Milan|USA|27|45
+Christopher Nkunku|ATT|AC Milan|FRA|28|30
+Santiago Giménez|ATT|AC Milan|MEX|25|30
+Michele Di Gregorio|GB|Juventus|ITA|28|25
+Mattia Perin|GB|Juventus|ITA|33|3
+Gleison Bremer|DEF|Juventus|BRA|29|50
+Federico Gatti|DEF|Juventus|ITA|28|25
+Lloyd Kelly|DEF|Juventus|ENG|27|20
+Pierre Kalulu|DEF|Juventus|FRA|26|25
+Daniele Rugani|DEF|Juventus|ITA|32|3
+Andrea Cambiaso|DEF|Juventus|ITA|26|40
+João Mário|DEF|Juventus|POR|26|10
+Weston McKennie|MIL|Juventus|USA|27|15
+Manuel Locatelli|MIL|Juventus|ITA|28|30
+Khéphren Thuram|MIL|Juventus|FRA|25|45
+Teun Koopmeiners|MIL|Juventus|NED|28|30
+Fabio Miretti|MIL|Juventus|ITA|23|10
+Francisco Conceição|AIL|Juventus|POR|23|30
+Kenan Yıldız|AIL|Juventus|TUR|21|75
+Edon Zhegrova|AIL|Juventus|KOS|27|20
+Loïs Openda|ATT|Juventus|BEL|26|35
+Jonathan David|ATT|Juventus|CAN|26|45
+Dušan Vlahović|ATT|Juventus|SRB|26|25
+Alex Meret|GB|Napoli|ITA|29|10
+Vanja Milinković-Savić|GB|Napoli|SRB|29|15
+Giovanni Di Lorenzo|DEF|Napoli|ITA|32|15
+Alessandro Buongiorno|DEF|Napoli|ITA|27|35
+Amir Rrahmani|DEF|Napoli|KOS|32|20
+Sam Beukema|DEF|Napoli|NED|27|30
+Mathías Olivera|DEF|Napoli|URU|28|15
+Leonardo Spinazzola|DEF|Napoli|ITA|33|5
+André-Frank Zambo Anguissa|MIL|Napoli|CMR|30|35
+Stanislav Lobotka|MIL|Napoli|SVK|31|25
+Scott McTominay|MIL|Napoli|SCO|29|45
+Kevin De Bruyne|MIL|Napoli|BEL|35|15
+Billy Gilmour|MIL|Napoli|SCO|25|20
+Matteo Politano|AIL|Napoli|ITA|32|15
+David Neres|AIL|Napoli|BRA|29|30
+Noa Lang|AIL|Napoli|NED|27|25
+Romelu Lukaku|ATT|Napoli|BEL|33|10
+Rasmus Højlund|ATT|Napoli|DEN|23|40
+Lorenzo Lucca|ATT|Napoli|ITA|25|25
+Marco Carnesecchi|GB|Atalanta|ITA|26|30
+Isak Hien|DEF|Atalanta|SWE|27|25
+Giorgio Scalvini|DEF|Atalanta|ITA|22|20
+Raoul Bellanova|DEF|Atalanta|ITA|26|20
+Éderson|MIL|Atalanta|BRA|27|45
+Marten de Roon|MIL|Atalanta|NED|35|3
+Lazar Samardžić|MIL|Atalanta|SRB|24|20
+Ademola Lookman|AIL|Atalanta|NGA|28|50
+Gianluca Scamacca|ATT|Atalanta|ITA|27|20
+Nikola Krstović|ATT|Atalanta|MNE|26|25
+Kamaldeen Sulemana|AIL|Atalanta|GHA|24|20
+Mile Svilar|GB|AS Roma|SRB|27|30
+Gianluca Mancini|DEF|AS Roma|ITA|30|15
+Evan Ndicka|DEF|AS Roma|CIV|27|30
+Wesley|DEF|AS Roma|BRA|22|25
+Angeliño|DEF|AS Roma|ESP|29|20
+Manu Koné|MIL|AS Roma|FRA|25|40
+Bryan Cristante|MIL|AS Roma|ITA|31|10
+Lorenzo Pellegrini|MIL|AS Roma|ITA|30|10
+Matías Soulé|AIL|AS Roma|ARG|23|35
+Paulo Dybala|ATT|AS Roma|ARG|32|8
+Artem Dovbyk|ATT|AS Roma|UKR|29|25
+Evan Ferguson|ATT|AS Roma|IRL|21|25
+Mario Gila|DEF|Lazio|ESP|26|25
+Nuno Tavares|DEF|Lazio|POR|26|15
+Mattéo Guendouzi|MIL|Lazio|FRA|27|25
+Nicolò Rovella|MIL|Lazio|ITA|24|30
+Mattia Zaccagni|AIL|Lazio|ITA|31|20
+Gustav Isaksen|AIL|Lazio|DEN|25|20
+Valentín Castellanos|ATT|Lazio|ARG|27|25
+Boulaye Dia|ATT|Lazio|SEN|29|15
+David de Gea|GB|Fiorentina|ESP|35|5
+Dodô|DEF|Fiorentina|BRA|27|20
+Moise Kean|ATT|Fiorentina|ITA|26|40
+Albert Gudmundsson|AIL|Fiorentina|ISL|29|20
+Nicolò Fagioli|MIL|Fiorentina|ITA|25|20
+Riccardo Orsolini|AIL|Bologne|ITA|29|25
+Santiago Castro|ATT|Bologne|ARG|21|20
+Jhon Lucumí|DEF|Bologne|COL|27|20
+Nico Paz|MIL|Côme|ARG|21|50
+Martin Baturina|MIL|Côme|CRO|23|15
+Álvaro Morata|ATT|Côme|ESP|33|10
+Manuel Neuer|GB|Bayern Munich|GER|40|3
+Jonas Urbig|GB|Bayern Munich|GER|22|8
+Dayot Upamecano|DEF|Bayern Munich|FRA|27|60
+Kim Min-jae|DEF|Bayern Munich|KOR|29|25
+Jonathan Tah|DEF|Bayern Munich|GER|30|30
+Josip Stanišić|DEF|Bayern Munich|CRO|26|20
+Sacha Boey|DEF|Bayern Munich|FRA|25|15
+Konrad Laimer|DEF|Bayern Munich|AUT|29|20
+Alphonso Davies|DEF|Bayern Munich|CAN|25|50
+Raphaël Guerreiro|DEF|Bayern Munich|POR|32|10
+Joshua Kimmich|MIL|Bayern Munich|GER|31|50
+Leon Goretzka|MIL|Bayern Munich|GER|31|15
+Aleksandar Pavlović|MIL|Bayern Munich|GER|22|40
+Tom Bischof|MIL|Bayern Munich|GER|20|15
+Jamal Musiala|MIL|Bayern Munich|GER|23|140
+Michael Olise|AIL|Bayern Munich|FRA|24|100
+Serge Gnabry|AIL|Bayern Munich|GER|30|10
+Luis Díaz|AIL|Bayern Munich|COL|29|60
+Lennart Karl|AIL|Bayern Munich|GER|18|15
+Harry Kane|ATT|Bayern Munich|ENG|33|80
+Nicolas Jackson|ATT|Bayern Munich|SEN|25|35
+Gregor Kobel|GB|Borussia Dortmund|SUI|28|35
+Niklas Süle|DEF|Borussia Dortmund|GER|30|10
+Nico Schlotterbeck|DEF|Borussia Dortmund|GER|26|40
+Waldemar Anton|DEF|Borussia Dortmund|GER|29|15
+Ramy Bensebaini|DEF|Borussia Dortmund|ALG|31|12
+Julian Ryerson|DEF|Borussia Dortmund|NOR|28|15
+Yan Couto|DEF|Borussia Dortmund|BRA|24|15
+Daniel Svensson|DEF|Borussia Dortmund|SWE|24|20
+Marcel Sabitzer|MIL|Borussia Dortmund|AUT|32|8
+Felix Nmecha|MIL|Borussia Dortmund|GER|25|12
+Jobe Bellingham|MIL|Borussia Dortmund|ENG|20|30
+Pascal Groß|MIL|Borussia Dortmund|GER|35|3
+Julian Brandt|MIL|Borussia Dortmund|GER|30|20
+Carney Chukwuemeka|MIL|Borussia Dortmund|ENG|22|20
+Karim Adeyemi|AIL|Borussia Dortmund|GER|24|40
+Maximilian Beier|ATT|Borussia Dortmund|GER|23|25
+Serhou Guirassy|ATT|Borussia Dortmund|GUI|30|40
+Fábio Silva|ATT|Borussia Dortmund|POR|24|15
+Mark Flekken|GB|Bayer Leverkusen|NED|33|8
+Edmond Tapsoba|DEF|Bayer Leverkusen|BFA|27|30
+Robert Andrich|MIL|Bayer Leverkusen|GER|31|10
+Aleix García|MIL|Bayer Leverkusen|ESP|29|20
+Alejandro Grimaldo|DEF|Bayer Leverkusen|ESP|30|40
+Patrik Schick|ATT|Bayer Leverkusen|CZE|30|25
+Nathan Tella|AIL|Bayer Leverkusen|NGA|26|15
+Ernest Poku|AIL|Bayer Leverkusen|NED|22|20
+Claudio Echeverri|MIL|Bayer Leverkusen|ARG|20|15
+Ibrahim Maza|MIL|Bayer Leverkusen|ALG|20|25
+Malik Tillman|MIL|Bayer Leverkusen|USA|24|20
+Christian Kofane|ATT|Bayer Leverkusen|CMR|19|8
+Péter Gulácsi|GB|RB Leipzig|HUN|36|3
+Christoph Baumgartner|MIL|RB Leipzig|AUT|26|20
+Assan Ouédraogo|MIL|RB Leipzig|GER|20|20
+Castello Lukeba|DEF|RB Leipzig|FRA|23|35
+David Raum|DEF|RB Leipzig|GER|28|15
+Antonio Nusa|AIL|RB Leipzig|NOR|21|30
+Johan Bakayoko|AIL|RB Leipzig|BEL|23|20
+Rômulo|ATT|RB Leipzig|BRA|24|15
+Robin Koch|DEF|Eintracht Francfort|GER|29|30
+Nnamdi Collins|DEF|Eintracht Francfort|GER|22|20
+Hugo Larsson|MIL|Eintracht Francfort|SWE|22|40
+Mario Götze|MIL|Eintracht Francfort|GER|34|3
+Ansgar Knauff|AIL|Eintracht Francfort|GER|24|20
+Jean-Mattéo Bahoya|AIL|Eintracht Francfort|FRA|21|20
+Jonathan Burkardt|ATT|Eintracht Francfort|GER|26|25
+Can Uzun|MIL|Eintracht Francfort|TUR|20|25
+Ritsu Doan|AIL|Eintracht Francfort|JPN|28|20
+Angelo Stiller|MIL|Stuttgart|GER|25|35
+Deniz Undav|ATT|Stuttgart|GER|30|30
+Ermedin Demirović|ATT|Stuttgart|BIH|28|25
+Jamie Leweling|AIL|Stuttgart|GER|25|25
+Alexander Nübel|GB|Stuttgart|GER|29|10
+Mohamed Amoura|ATT|Wolfsburg|ALG|26|25
+Cristiano Ronaldo|ATT|Al-Nassr|POR|41|10
+Sadio Mané|AIL|Al-Nassr|SEN|34|12
+Kingsley Coman|AIL|Al-Nassr|FRA|30|25
+João Félix|AIL|Al-Nassr|POR|26|25
+Iñigo Martínez|DEF|Al-Nassr|ESP|35|3
+Karim Benzema|ATT|Al-Ittihad|FRA|38|8
+N'Golo Kanté|MIL|Al-Ittihad|FRA|35|5
+Fabinho|MIL|Al-Ittihad|BRA|32|5
+Moussa Diaby|AIL|Al-Ittihad|FRA|27|25
+Theo Hernández|DEF|Al-Hilal|FRA|28|25
+Rúben Neves|MIL|Al-Hilal|POR|29|30
+Sergej Milinković-Savić|MIL|Al-Hilal|SRB|31|12
+Yassine Bounou|GB|Al-Hilal|MAR|35|8
+Darwin Núñez|ATT|Al-Hilal|URU|27|35
+João Cancelo|DEF|Al-Hilal|POR|32|15
+Kalidou Koulibaly|DEF|Al-Hilal|SEN|35|5
+Malcom|AIL|Al-Hilal|BRA|29|15
+Riyad Mahrez|AIL|Al-Ahli|ALG|35|8
+Ivan Toney|ATT|Al-Ahli|ENG|30|20
+Enzo Millot|MIL|Al-Ahli|FRA|24|20
+Édouard Mendy|GB|Al-Ahli|SEN|34|5
+Lionel Messi|AIL|Inter Miami|ARG|39|15
+Luis Suárez|ATT|Inter Miami|URU|39|1
+Rodrigo De Paul|MIL|Inter Miami|ARG|32|12
+Sergio Busquets|MIL|Inter Miami|ESP|38|1
+Son Heung-min|AIL|Los Angeles FC|KOR|34|15
+Thomas Müller|MIL|Vancouver|GER|36|3
+Neymar|AIL|Santos|BRA|34|10
+Victor Osimhen|ATT|Galatasaray|NGA|27|75
+Leroy Sané|AIL|Galatasaray|GER|30|30
+Ilkay Gündogan|MIL|Galatasaray|GER|35|5
+Barış Alper Yılmaz|AIL|Galatasaray|TUR|26|30
+Lucas Torreira|MIL|Galatasaray|URU|30|10
+Ederson|GB|Fenerbahçe|BRA|33|15
+Kerem Aktürkoğlu|AIL|Fenerbahçe|TUR|27|15
+Marco Asensio|MIL|Fenerbahçe|ESP|30|15
+Diogo Costa|GB|FC Porto|POR|27|40
+Rodrigo Mora|MIL|FC Porto|POR|19|35
+Samu Aghehowa|ATT|FC Porto|ESP|22|40
+Anatoliy Trubin|GB|Benfica|UKR|25|30
+Vangelis Pavlidis|ATT|Benfica|GRE|27|25
+Nicolás Otamendi|DEF|Benfica|ARG|38|3
+Gianluca Prestianni|AIL|Benfica|ARG|20|15
+Andreas Schjelderup|AIL|Benfica|NOR|22|20
+Francisco Trincão|AIL|Sporting|POR|26|25
+Morten Hjulmand|MIL|Sporting|DEN|27|30
+Geovany Quenda|AIL|Sporting|POR|19|30
+Rui Silva|GB|Sporting|POR|32|8
+Ismael Saibari|MIL|PSV Eindhoven|MAR|25|25
+Guus Til|MIL|PSV Eindhoven|NED|28|15
+Wout Weghorst|ATT|Ajax|NED|33|3
+Tsuyoshi Watanabe|DEF|Feyenoord|JPN|29|15
+Daizen Maeda|AIL|Celtic|JPN|28|10
+Sébastien Haller|ATT|Utrecht|CIV|32|5
+Tosin Adarabioyo|DEF|Chelsea|ENG|28|25
+Hiroki Ito|DEF|Bayern Munich|JPN|27|15
+Javi Galán|DEF|Atlético Madrid|ESP|31|8
+Vasilije Adžić|MIL|Juventus|MNE|20|8
+Juan Cabal|DEF|Juventus|COL|25|12
+Eljif Elmas|MIL|Napoli|MKD|26|12
+Pasquale Mazzocchi|DEF|Napoli|ITA|31|3
+Juan Jesus|DEF|Napoli|BRA|35|2
+Lorenzo Torriani|GB|AC Milan|ITA|20|3
+Warren Bondo|MIL|AC Milan|FRA|22|8
+Tyrell Malacia|DEF|Manchester United|NED|27|5
+Ayden Heaven|DEF|Manchester United|ENG|19|10
+Chido Obi|ATT|Manchester United|DEN|18|8
+Filippo Mané|DEF|Borussia Dortmund|GER|21|8
+Salih Özcan|MIL|Borussia Dortmund|TUR|28|5
+Julien Duranville|AIL|Borussia Dortmund|BEL|20|12
+Emre Can|DEF|Borussia Dortmund|GER|32|5
+`;
+const P=RAW.trim().split("\n").map(l=>{const a=l.split("|");return {name:a[0],pos:a[1],club:a[2],nat:a[3],age:+a[4],val:+a[5],lg:CLUBS[a[2]]||"OTH"}});
+const AVG=Math.round(P.reduce((s,p)=>s+p.val,0)/P.length);
+let POOL=P.slice(),POOL_LABEL="Tous les joueurs";
+const POSLBL={GB:"Gardien",DEF:"Défenseur",MIL:"Milieu",AIL:"Ailier",ATT:"Attaquant"};
+
+// ---------- État ----------
+const cfg={mode:"ai",budget:100,size:5,level:2,names:["Toi","Ordinateur"],poolType:"all",poolKey:"",expert:false,timer:10};
+let S=null, aiTimer=null;
+const $=id=>document.getElementById(id);
+const fmt=n=>n.toLocaleString("fr-FR");
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+
+function steps(){const b=cfg.budget;return [Math.max(1,Math.round(b*0.01)),Math.max(2,Math.round(b*0.05)),Math.max(3,Math.round(b*0.10))]}
+function minBid(){return steps()[0]}
+function slotsLeft(i){return cfg.size-S.p[i].team.length}
+function maxBid(i){return S.p[i].budget-(slotsLeft(i)-1)*minBid()}
+function isFull(i){return slotsLeft(i)===0}
+
+// ---------- Réglages ----------
+function seg(id,key,parse){$(id).querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{
+  $(id).querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed","false"));b.setAttribute("aria-pressed","true");cfg[key]=parse(b.dataset.v);onCfg();}))}
+seg("segMode","mode",v=>v);seg("segBudget","budget",Number);seg("segSize","size",Number);seg("segLevel","level",Number);seg("segCard","expert",v=>v==="1");seg("segTimer","timer",Number);seg("segPool","poolType",v=>{cfg.poolKey="";return v});
+$("poolSel").addEventListener("change",()=>{cfg.poolKey=$("poolSel").value;onCfg()});
+function poolGroups(type){
+  const g={};P.forEach(p=>{const k=type==="lg"?p.lg:type==="nat"?p.nat:p.club;g[k]=(g[k]||0)+1});
+  const lbl=k=>type==="lg"?LEAGUES[k]||k:type==="nat"?(NATS[k]||k):k;
+  return Object.keys(g).map(k=>({k,n:g[k],label:lbl(k)})).sort((a,b)=>b.n-a.n||a.label.localeCompare(b.label));
+}
+function buildPool(){
+  if(cfg.poolType==="all"){POOL=P.slice();POOL_LABEL="Tous les joueurs";return}
+  const f=cfg.poolType==="lg"?p=>p.lg===cfg.poolKey:cfg.poolType==="nat"?p=>p.nat===cfg.poolKey:p=>p.club===cfg.poolKey;
+  POOL=P.filter(f);
+  const g=poolGroups(cfg.poolType).find(x=>x.k===cfg.poolKey);POOL_LABEL=g?g.label:"";
+}
+function poolValid(){return POOL.length>=2*cfg.size}
+function onCfg(){
+  $("fieldAI").style.display=cfg.mode==="ai"?"":"none";$("fieldTimer").style.display=cfg.mode==="online"?"":"none";
+  $("lobby").classList.toggle("on",cfg.mode==="online");
+  $("n2").style.display=cfg.mode==="online"?"none":"";
+  $("btnStart").style.display=(cfg.mode==="online"&&!(NET.role==="host"&&NET.connected))?"none":"";
+  if(cfg.mode==="online"&&NET.role==="host"&&NET.connected)$("btnStart").textContent=`Lancer la partie contre ${NET.peerName}`;else $("btnStart").textContent="Lancer la partie";
+  if(cfg.mode==="ai"&&($("n2").value==="Joueur 2"||$("n2").value===""))$("n2").value="Ordinateur";
+  if(cfg.mode==="hot"&&$("n2").value==="Ordinateur")$("n2").value="Joueur 2";
+  if(cfg.mode!=="online"&&NET.role)netReset();
+  // base de tirage
+  const sel=$("poolSel");
+  if(cfg.poolType==="all"){sel.style.display="none";$("hintPool").textContent=`${P.length} joueurs, toutes ligues confondues.`}
+  else{
+    sel.style.display="";
+    const groups=poolGroups(cfg.poolType),min=2*cfg.size;
+    if(!cfg.poolKey||!groups.find(g=>g.k===cfg.poolKey&&g.n>=min)){const first=groups.find(g=>g.n>=min);cfg.poolKey=first?first.k:(groups[0]?groups[0].k:"")}
+    sel.innerHTML=groups.map(g=>`<option value="${g.k}" ${g.n<min?"disabled":""} ${g.k===cfg.poolKey?"selected":""}>${g.label} · ${g.n} joueurs${g.n<min?" (pas assez pour 2 × "+cfg.size+")":""}</option>`).join("");
+    const okN=groups.filter(g=>g.n>=min).length;
+    $("hintPool").textContent=okN?`${okN} ${cfg.poolType==="lg"?"ligues":cfg.poolType==="nat"?"pays":"clubs"} possibles pour des équipes de ${cfg.size}. Il faut au moins ${min} joueurs.`:`Aucun${cfg.poolType==="nat"?" pays":cfg.poolType==="lg"?"e ligue":" club"} n'a ${min} joueurs dans la base : réduis la taille d'équipe.`;
+  }
+  buildPool();
+  $("btnStart").disabled=!poolValid();
+  const avg=POOL.length?Math.round(POOL.reduce((s,p)=>s+p.val,0)/POOL.length):AVG;
+  const need=avg*cfg.size, ratio=cfg.budget/need;
+  let msg=`Valeur moyenne d'un joueur de la base choisie : ${avg} M€ · une équipe de ${cfg.size} vaut ~${fmt(need)} M€. `;
+  msg+=ratio<1.2?"Budget serré : enchères très tendues.":ratio>2.5?"Budget large : enchères molles, pensez à réduire.":"Bon équilibre.";
+  $("hintEco").textContent=msg;
+}
+// ---------- Réseau (salon via la base Supabase : fiable sur tous les réseaux) ----------
+const NET={role:null,code:"",peerName:"",myIndex:0,oppRatings:null,lastSeen:0,sendSeq:0,recvSeq:0,outbox:[],pollT:null,hbT:null,connected:false};
+const ALPHA="ABCDEFGHJKLMNPQRSTUVWXYZ";
+function mkCode(){let c="";for(let i=0;i<4;i++)c+=ALPHA[Math.floor(Math.random()*ALPHA.length)];return c}
+function netStatus(msg,cls){const e=$("netStatus");e.textContent=msg;e.className="status "+(cls||"")}
+function netReset(){clearInterval(NET.pollT);clearInterval(NET.hbT);
+  if(NET.role==="host"&&NET.code){sb("rooms?code=eq."+NET.code,{method:"DELETE",prefer:"return=minimal"}).catch(()=>{})}
+  NET.role=null;NET.code="";NET.peerName="";NET.oppRatings=null;NET.sendSeq=0;NET.recvSeq=0;NET.outbox=[];NET.connected=false;
+  $("lobbyIdle").style.display="";$("lobbyHost").style.display="none";$("joinBox").style.display="none";netStatus("")}
+function myName(){return $("n1").value.trim()||"Manager"}
+function onLost(){
+  if(!NET.role)return;
+  const inGame=$("game").classList.contains("on")||$("reveal").classList.contains("on");
+  netReset();
+  if(inGame){$("lost").classList.add("on")}else{netStatus("Connexion perdue.","err");onCfg()}
+}
+$("lostBtn").onclick=()=>{$("lost").classList.remove("on");clearTimeout(aiTimer);show("home");onCfg()};
+function send(m){
+  if(!NET.role)return;
+  NET.sendSeq++;NET.outbox.push({q:NET.sendSeq,m});NET.outbox=NET.outbox.slice(-12);
+  const body=NET.role==="host"?{h:NET.outbox,hseq:NET.sendSeq}:{g:NET.outbox,gseq:NET.sendSeq};
+  body.updated_at=new Date().toISOString();
+  sb("rooms?code=eq."+NET.code,{method:"PATCH",prefer:"return=minimal",body:JSON.stringify(body)}).catch(e=>console.warn("send",e.message));
+}
+async function poll(){
+  if(!NET.role)return;
+  try{
+    const rows=await sb(`rooms?code=eq.${NET.code}&select=h,g,hseq,gseq`);
+    const r=rows[0];if(!r)return;
+    const inbox=(NET.role==="host"?(r.g||[]):(r.h||[])).filter(x=>x&&x.q>NET.recvSeq).sort((a,b)=>a.q-b.q);
+    inbox.forEach(x=>{NET.recvSeq=x.q;NET.lastSeen=Date.now();onData(x.m)});
+  }catch(e){console.warn("poll",e.message)}
+}
+function startLink(){
+  NET.lastSeen=Date.now();NET.connected=true;
+  clearInterval(NET.pollT);NET.pollT=setInterval(poll,1200);
+  clearInterval(NET.hbT);NET.hbT=setInterval(()=>{send({t:"ping"});if(Date.now()-NET.lastSeen>25000)onLost()},5000);
+}
+$("btnHost").onclick=async()=>{
+  if(!leagueOn())return netStatus("Le mode en ligne a besoin de la base configurée (elle l'est normalement) et d'internet.","err");
+  netReset();NET.role="host";NET.myIndex=0;NET.code=mkCode();
+  netStatus("Création du salon…");
+  try{await pullProfile(myName())}catch(e){}
+  try{
+    await sb("rooms",{method:"POST",prefer:"resolution=merge-duplicates,return=minimal",
+      body:JSON.stringify({code:NET.code,league:LEAGUE.code,host:myName(),guest:null,h:[],g:[],hseq:0,gseq:0,updated_at:new Date().toISOString()})});
+    $("lobbyIdle").style.display="none";$("lobbyHost").style.display="";$("codeOut").textContent=NET.code;
+    netStatus("En attente de ton ami…");
+    clearInterval(NET.pollT);NET.pollT=setInterval(poll,1200);poll();
+  }catch(e){netStatus("Impossible de créer le salon ("+e.message+"). La table « rooms » existe-t-elle dans Supabase ?","err");NET.role=null}
+};
+$("btnJoinUI").onclick=()=>{$("joinBox").style.display="";$("codeIn").focus()};
+$("codeIn").addEventListener("input",()=>{$("codeIn").value=$("codeIn").value.toUpperCase().replace(/[^A-Z]/g,"")});
+$("btnJoin").onclick=async()=>{
+  if(!leagueOn())return netStatus("Le mode en ligne a besoin de la base configurée et d'internet.","err");
+  const code=$("codeIn").value.trim().toUpperCase();if(code.length!==4)return netStatus("Le code fait 4 lettres.","err");
+  netReset();NET.role="guest";NET.myIndex=1;NET.code=code;
+  netStatus("Connexion au salon "+code+"…");
+  try{await pullProfile(myName())}catch(e){}
+  try{
+    const rows=await sb(`rooms?code=eq.${code}&select=code,host,updated_at`);
+    if(!rows[0]){netStatus("Salon introuvable. Vérifie le code (et que ton ami a bien créé le salon).","err");NET.role=null;return}
+    if(Date.now()-new Date(rows[0].updated_at).getTime()>10*60*1000){netStatus("Ce salon n'est plus actif. Demande à ton ami d'en créer un nouveau.","err");NET.role=null;return}
+    await sb("rooms?code=eq."+code,{method:"PATCH",prefer:"return=minimal",body:JSON.stringify({guest:myName(),g:[],gseq:0,updated_at:new Date().toISOString()})});
+    send({t:"hello",name:myName(),r:myRatings(myName())});
+    $("lobbyIdle").style.display="none";
+    netStatus("Salon "+code+" trouvé, chez "+(rows[0].host||"ton ami")+". En attente de sa réponse…");
+    startLink();
+    setTimeout(()=>{if(NET.role==="guest"&&!NET.peerName){netStatus("L'hôte ne répond pas. Vérifie qu'il a toujours le salon ouvert, puis réessaie.","err")}},15000);
+  }catch(e){netStatus("Erreur de connexion ("+e.message+").","err");NET.role=null}
+};
+function onData(m){
+  if(!m||typeof m!=="object"||m.t==="ping")return;
+  if(m.t==="rating"){if(m.r&&typeof m.r==="object")NET.oppRatings={g:+m.r.g||1000,cats:m.r.cats||{}};return}
+  if(m.t==="hello"){const first=!NET.peerName;NET.peerName=String(m.name||"Ami").slice(0,14);NET.oppRatings=(m.r&&typeof m.r==="object")?{g:+m.r.g||1000,cats:m.r.cats||{}}:{g:1000,cats:{}};
+    if(NET.role==="host"){if(first)send({t:"hello",name:myName(),r:myRatings(myName())});startLink();netStatus(`${NET.peerName} a rejoint le salon. À toi de lancer.`,"ok");onCfg()}
+    else{netStatus(`Connecté chez ${NET.peerName}. En attente du lancement…`,"ok")}
+    return}
+  if(NET.role==="host"&&m.t!=="again"){
+    if(m.t==="act"&&S&&S.actor===1&&!S.solo&&!S.over&&!S.lock){if(m.a==="bid")bid(Number(m.step)||0);else if(m.a==="pass")pass()}
+    return;
+  }
+  // invité
+  if(m.t==="state"){cfg.budget=m.cfg.budget;cfg.size=m.cfg.size;cfg.poolType=m.cfg.poolType||"all";cfg.poolKey=m.cfg.poolKey||"";cfg.expert=!!m.cfg.expert;cfg.timer=+m.cfg.timer||0;cfg.mode="online";S=m.S;
+    if(S.over){endGame();return}
+    if(!$("game").classList.contains("on")){show("game");$("log").innerHTML=""}
+    if(m.log)m.log.forEach(l=>addLog(l.m,l.c));
+    render(m.newCard);
+    if(!S.p[1]||S.actor!==1||S.solo)setPrompt(S.solo?`${esc(S.p[S.actor].name)} achète seul, au prix minimum…`:`En attente de ${esc(S.p[S.actor].name)}…`);
+    return}
+  if(m.t==="again"){NET.peerReady=true;
+    if(NET.role==="host"){if(NET.meReady)start();else{$("btnAgain").textContent="Revanche !";$("againStatus").textContent=`${NET.peerName} veut une revanche.`}}
+    else{$("againStatus").textContent=`${NET.peerName} propose une revanche.`;if(!NET.meReady)$("btnAgain").textContent="Accepter la revanche"}
+    return}
+  if(m.t==="toast"){toast(m.msg,m.sold);return}
+  if(m.t==="fx"){if(m.k==="sold")fxStamp("Vendu !");else if(m.k==="rec")fxStamp("Recruté",true);return}
+}
+let logBuf=[];
+function sync(newCard){
+  if(NET.role!=="host"||!S)return;
+  const out=JSON.parse(JSON.stringify(S));
+  out.pool=new Array(S.pool.length).fill(0);out.discarded=[];
+  if(!S.over){ // les valeurs restent secrètes jusqu'à la révélation
+    if(out.cur){delete out.cur.val;delete out.cur.aiEst}
+    out.p.forEach(m=>m.team.forEach(x=>{delete x.val;delete x.aiEst}));
+  }
+  send({t:"state",cfg:{budget:cfg.budget,size:cfg.size,poolType:cfg.poolType,poolKey:cfg.poolKey,expert:cfg.expert,timer:cfg.timer},S:out,newCard:!!newCard,log:logBuf});logBuf=[];
+}
+onCfg();
+
+// ---------- Navigation ----------
+function show(id){["home","game","reveal","rank"].forEach(s=>$(s).classList.toggle("on",s===id));window.scrollTo(0,0)}
+$("btnRules").onclick=()=>$("rulesModal").classList.add("on");
+$("btnCloseRules").onclick=()=>$("rulesModal").classList.remove("on");
+$("btnHome").onclick=()=>{if(NET.role==="guest"){netReset();cfg.mode="online"}show("home");onCfg()};
+$("btnAgain").onclick=()=>{
+  if(cfg.mode!=="online"||!NET.role)return start();
+  if(NET.role==="guest"){if(NET.meReady)return;NET.meReady=true;send({t:"again"});$("btnAgain").textContent="En attente…";$("againStatus").textContent=`Revanche demandée à ${NET.peerName}.`;return}
+  NET.meReady=true;
+  if(NET.peerReady)return start();
+  send({t:"again"});$("btnAgain").textContent="En attente…";$("againStatus").textContent=`Revanche proposée à ${NET.peerName}.`;
+};
+$("btnStart").onclick=()=>start();
+let toastT=null;
+function toast(msg,sold){if(NET.role==="host")send({t:"toast",msg,sold:!!sold});const t=$("toast");t.textContent=msg;t.classList.toggle("sold",!!sold);t.classList.add("on");clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("on"),1400)}
+
+
+
+// ---------- Effets visuels ----------
+const REDUCE=matchMedia("(prefers-reduced-motion: reduce)").matches;
+let lastShownBid=-1;
+function fxBid(diff){
+  const cur=$("curBid");cur.classList.remove("bump");void cur.offsetWidth;cur.classList.add("bump");
+  if(REDUCE||!diff)return;
+  const r=cur.getBoundingClientRect();const c=document.createElement("div");c.className="chip";c.textContent="+"+fmt(diff)+" M€";
+  c.style.left=(r.right+8)+"px";c.style.top=(r.top-4)+"px";document.body.appendChild(c);setTimeout(()=>c.remove(),850);
+}
+function fxStamp(txt,green){
+  const card=$("card");const old=card.querySelector(".stamp");if(old)old.remove();
+  const s=document.createElement("div");s.className="stamp"+(green?" grn":"");s.textContent=txt;card.appendChild(s);
+}
+function tween(el,from,to,ms){
+  if(REDUCE||ms<=0){el.innerHTML=`${fmt(to)}<small>M€</small>`;return}
+  const t0=performance.now();
+  (function step(t){const k=Math.min(1,(t-t0)/ms);const v=Math.round(from+(to-from)*(1-Math.pow(1-k,3)));
+    el.innerHTML=`${fmt(v)}<small>M€</small>`;if(k<1)requestAnimationFrame(step)})(t0);
+}
+function confetti(){
+  if(REDUCE)return;
+  const cv=document.createElement("canvas");cv.id="confetti";document.body.appendChild(cv);
+  const dpr=window.devicePixelRatio||1;cv.width=innerWidth*dpr;cv.height=innerHeight*dpr;
+  const ctx=cv.getContext("2d");ctx.scale(dpr,dpr);
+  const cols=["#f5a623","#3ccf7f","#eef5ee","#5aa9ff"];
+  const ps=Array.from({length:90},()=>({x:Math.random()*innerWidth,y:-20-Math.random()*innerHeight*.5,w:5+Math.random()*5,h:8+Math.random()*8,c:cols[Math.floor(Math.random()*cols.length)],v:2+Math.random()*3,r:Math.random()*Math.PI,vr:(Math.random()-.5)*.2,sway:Math.random()*2}));
+  const t0=performance.now();
+  (function step(t){const dt=(t-t0)/1000;ctx.clearRect(0,0,innerWidth,innerHeight);
+    ps.forEach(p=>{p.y+=p.v;p.x+=Math.sin(dt*3+p.sway*7)*.8;p.r+=p.vr;
+      ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.r);ctx.fillStyle=p.c;ctx.globalAlpha=Math.max(0,1-dt/2.8);ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);ctx.restore()});
+    if(dt<2.8)requestAnimationFrame(step);else cv.remove()})(t0);
+}
+
+// ---------- Classement & scores ----------
+const DIVS=[[1500,"Légende"],[1300,"Élite"],[1100,"Pro"],[900,"Semi-pro"],[0,"Amateur"]];
+function divOf(r){return DIVS.find(d=>r>=d[0])[1]}
+function loadProfiles(){try{return JSON.parse(localStorage.getItem("md_profiles")||"{}")}catch(e){return {}}}
+function saveProfiles(o){try{localStorage.setItem("md_profiles",JSON.stringify(o))}catch(e){}}
+function pkey(n){return String(n).trim().toLowerCase()}
+function newProfile(name){return {name:String(name).trim(),g:1000,cats:{},games:0,wins:0,streak:0,bestStreak:0,bestScore:0,bestMargin:0,gc:{}}}
+function getProfile(name){const all=loadProfiles();return all[pkey(name)]||newProfile(name)}
+function ratingOf(p,sc){return sc==="g"?p.g:(p.cats&&p.cats[sc]!=null?p.cats[sc]:1000)}
+function catKey(){return cfg.poolType==="all"?null:cfg.poolType+":"+cfg.poolKey}
+function catLabel(k){if(!k)return "Global";const [t,v]=[k.slice(0,k.indexOf(":")),k.slice(k.indexOf(":")+1)];return t==="lg"?(LEAGUES[v]||v):t==="nat"?(NATS[v]||v):v}
+function eloDelta(me,opp,score,games){const K=games<10?48:32;const E=1/(1+Math.pow(10,(opp-me)/400));return Math.round(K*(score-E))}
+function streakBonus(n){return n===5?25:n===10?60:(n>=20&&n%20===0)?150:0}
+// applique un résultat au profil `name` ; oppR = {g, cats} de l'adversaire ; score 1 / 0.5 / 0
+function seasonId(d){d=d||new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")}
+function seasonLabel(id){if(!id)return "";const [y,m]=id.split("-");return new Date(+y,+m-1,1).toLocaleDateString("fr-FR",{month:"long",year:"numeric"})}
+// nouvelle saison : les scores reviennent à mi-chemin de 1 000, l'ancienne saison est archivée
+function applySeason(p){const cur=seasonId();if(!p.season){p.season=cur;return false}if(p.season===cur)return false;
+  p.lastSeason={id:p.season,g:p.g,cats:Object.assign({},p.cats||{})};
+  p.g=Math.round((p.g+1000)/2);Object.keys(p.cats||{}).forEach(k=>p.cats[k]=Math.round((p.cats[k]+1000)/2));
+  p.season=cur;return true}
+function applyResult(name,oppR,score,myTotal,oppTotal,oppName){
+  const all=loadProfiles();const k=pkey(name);const p=all[k]||newProfile(name);
+  applySeason(p);
+  const scopes=["g"];const ck=catKey();if(ck)scopes.push(ck);
+  const won=score===1;
+  p.games++;if(won){p.wins++;p.streak++;p.bestStreak=Math.max(p.bestStreak,p.streak)}else if(score===0)p.streak=0;
+  const margin=Math.max(0,myTotal-oppTotal);
+  if(myTotal>p.bestScore)p.bestScore=myTotal;
+  if(won&&margin>p.bestMargin)p.bestMargin=margin;
+  const sb=won?streakBonus(p.streak):0;
+  const out={name:p.name,lines:[],streak:p.streak,streakBonus:sb,total:0};
+  scopes.forEach(sc=>{
+    const me=ratingOf(p,sc),opp=sc==="g"?(oppR.g||1000):(oppR.cats&&oppR.cats[sc]!=null?oppR.cats[sc]:(oppR.g||1000));
+    const n=(p.gc[sc]||0);p.gc[sc]=n+1;
+    const d=eloDelta(me,opp,score,n);
+    let ub=0;if(won&&opp>me){const m=oppTotal>0?Math.min(1,margin/oppTotal):0;ub=Math.min(50,Math.round(0.1*(opp-me)*(1+m)))}
+    const delta=d+ub+sb;const after=Math.max(100,me+delta);
+    if(sc==="g")p.g=after;else p.cats[sc]=after;
+    out.lines.push({scope:sc,label:catLabel(sc==="g"?null:sc),before:me,after,elo:d,upset:ub,opp});
+    out.total+=after-me;
+  });
+  p.hist=(p.hist||[]);p.hist.unshift({d:Date.now(),opp:oppName||"",my:myTotal,op:oppTotal,r:score,pts:out.total,cat:catLabel(ck)});p.hist=p.hist.slice(0,20);
+  all[k]=p;saveProfiles(all);return out;
+}
+function myRatings(name){const p=getProfile(name);return {g:p.g,cats:p.cats||{}}}
+function aiRatings(){const r=[900,1100,1300][cfg.level-1]||1100;return {g:r,cats:{}}}
+function renderRatingBox(results){
+  const box=$("ratingBox");if(!box)return;
+  box.innerHTML=results.map(r=>`<div class="rbox"><p class="t"><span>${esc(r.name)}</span><span class="tot ${r.total<0?"neg":""}">${r.total>=0?"+":""}${r.total} pts</span></p>
+    ${r.lines.map(l=>`<div class="ln"><span>${esc(l.label)} · ${l.before} → ${l.after}</span><b class="${l.elo+l.upset>=0?"up":"dn"}">${l.elo>=0?"+":""}${l.elo}${l.upset?` <span style="color:var(--amber)">+${l.upset} exploit</span>`:""}</b></div>`).join("")}
+    ${r.streakBonus?`<div class="bn">Série de ${r.streak} victoires : +${r.streakBonus} pts sur chaque score</div>`:r.streak>=2?`<div class="bn" style="color:var(--chalk-2)">Série en cours : ${r.streak} victoires</div>`:""}
+  </div>`).join("");
+}
+function updateStrip(){
+  const el=$("meName");if(!el)return;
+  const p=getProfile($("n1").value||"Manager");
+  el.innerHTML=`<span class="div">${divOf(p.g)}</span>${esc(p.name)}`;
+  $("meInfo").textContent=`${p.g} pts · ${p.games} partie${p.games>1?"s":""} · ${p.wins} victoire${p.wins>1?"s":""}${p.streak>=2?` · série ${p.streak}`:""}`;
+}
+$("n1").addEventListener("input",updateStrip);
+// écran classement
+const rank={type:"g",key:""};
+$("segRank").querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{$("segRank").querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed","false"));b.setAttribute("aria-pressed","true");rank.type=b.dataset.v;rank.key="";renderRankNow()}));
+$("rankSel").addEventListener("change",()=>{rank.key=$("rankSel").value;renderRankNow()});
+async function renderRank(){
+  const st=$("rankStatus");
+  if(leagueOn()){st.textContent=`${LEAGUE.name} · synchronisation…`;
+    try{await pullAll();st.textContent=`${LEAGUE.name} · à jour ${new Date().toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"})}`;renderRecent()}
+    catch(e){st.textContent=`${LEAGUE.name} · hors ligne (scores de cet appareil)`}}
+  else st.textContent="Classement des managers ayant joué sur cet appareil.";
+  renderRankNow();
+}
+async function renderRecent(){
+  const el=$("recent");
+  try{const rows=await recentMatches();if(!rows.length){el.innerHTML="";return}
+    el.innerHTML=`<h2 style="margin-top:18px;font-size:22px">Dernières parties</h2><table class="rtbl">${rows.map(m=>{const d=new Date(m.played_at);return `<tr><td style="color:var(--muted);font-size:12px">${d.toLocaleDateString("fr-FR",{day:"2-digit",month:"2-digit"})}</td><td>${esc(m.p1)} <span style="color:var(--muted)">vs</span> ${esc(m.p2)}<br><small style="color:var(--muted)">${esc(m.pool||"Tous")}</small></td><td class="n" style="font-size:15px">${fmt(m.s1)}–${fmt(m.s2)}</td><td style="font-size:12px;color:var(--amber)">${m.winner?esc(m.winner):"nul"}</td></tr>`}).join("")}</table>`}
+  catch(e){el.innerHTML=""}
+}
+function renderRankNow(){
+  const all=Object.values(loadProfiles());
+  const sel=$("rankSel");
+  let scope="g";
+  if(rank.type==="g"){sel.style.display="none"}
+  else{
+    sel.style.display="";
+    const keys={};all.forEach(p=>Object.keys(p.cats||{}).forEach(k=>{if(k.startsWith(rank.type+":"))keys[k]=(keys[k]||0)+1}));
+    const ks=Object.keys(keys).sort((a,b)=>catLabel(a).localeCompare(catLabel(b)));
+    if(!ks.length){sel.innerHTML=`<option>Aucune partie jouée dans cette catégorie</option>`;$("rankTable").innerHTML=`<p class="empty">Joue une partie avec une base « ${rank.type==="lg"?"Ligue":rank.type==="nat"?"Pays":"Club"} » pour créer ce classement.</p>`;renderRecords();return}
+    if(!rank.key||!keys[rank.key])rank.key=ks[0];
+    sel.innerHTML=ks.map(k=>`<option value="${k}" ${k===rank.key?"selected":""}>${catLabel(k)} · ${keys[k]} manager${keys[k]>1?"s":""}</option>`).join("");
+    scope=rank.key;
+  }
+  const rows=all.filter(p=>scope==="g"?p.games>0:(p.cats&&p.cats[scope]!=null)).map(p=>({p,r:ratingOf(p,scope),n:scope==="g"?p.games:(p.gc&&p.gc[scope])||0})).sort((a,b)=>b.r-a.r||b.n-a.n);
+  const me=pkey($("n1").value||"");
+  $("rankTable").innerHTML=rows.length?`<table class="rtbl"><tr><th></th><th>Manager</th><th class="n">Pts</th><th class="n">Parties</th><th class="n">Série</th></tr>${rows.map((x,i)=>`<tr class="${pkey(x.p.name)===me?"me":""}"><td class="pos">${i+1}</td><td><span class="div">${divOf(x.r)}</span>${esc(x.p.name)}</td><td class="n">${x.r}</td><td class="n">${x.n}</td><td class="n">${x.p.streak||0}</td></tr>`).join("")}</table>`:`<p class="empty">Aucune partie jouée sur cet appareil.</p>`;
+  renderRecords();
+}
+function renderRecords(){
+  const p=getProfile($("n1").value||"Manager");
+  {const all=loadProfiles();let ch=false;Object.values(all).forEach(x=>{if(applySeason(x))ch=true});if(ch){saveProfiles(all);Object.assign(p,all[pkey(p.name)]||p)}}
+  $("recTitle").textContent=`Records de ${p.name}`;
+  const wr=p.games?Math.round(100*p.wins/p.games):0;
+  const h=p.hist||[];
+  $("hist").innerHTML=h.length?`<h2 style="margin-top:18px;font-size:22px">Mes dernières parties</h2>${h.map(x=>{const d=new Date(x.d);return `<div class="row"><span class="pn">${d.toLocaleDateString("fr-FR",{day:"2-digit",month:"2-digit"})} · vs ${esc(x.opp)}<br><small>${esc(x.cat||"Global")}</small></span><span class="${x.r===1?"w":x.r===0?"l":"d"}">${x.r===1?"Victoire":x.r===0?"Défaite":"Nul"} ${fmt(x.my)}–${fmt(x.op)}<br><small class="d">${x.pts>=0?"+":""}${x.pts} pts</small></span></div>`}).join("")}`:"";
+  $("records").innerHTML=[["Score global",`${p.g}<small>pts</small>`],["Division",divOf(p.g)],["Victoires",`${p.wins}<small>/ ${p.games}</small>`],["Taux de victoire",`${wr}<small>%</small>`],["Meilleure série",`${p.bestStreak}<small>victoires</small>`],["Série en cours",`${p.streak}<small>victoires</small>`],["Plus grand score",`${fmt(p.bestScore)}<small>M€</small>`],["Plus grand écart",`${fmt(p.bestMargin)}<small>M€</small>`],["Saison en cours",seasonLabel(p.season||seasonId())],["Saison précédente",p.lastSeason?`${p.lastSeason.g}<small>pts · ${seasonLabel(p.lastSeason.id)}</small>`:"—"]].map(([l,v])=>`<div class="rec"><div class="l">${l}</div><div class="v">${v}</div></div>`).join("");
+}
+$("btnRank").onclick=()=>{show("rank");renderRank()};
+$("btnRankBack").onclick=()=>{show("home");updateStrip()};
+$("btnRankPlay").onclick=()=>{show("home");updateStrip()};
+updateStrip();
+if(leagueOn())$("rankTitle").textContent=LEAGUE.name;
+
+
+// ---------- Ligue privée partagée (Supabase, API REST) ----------
+function leagueOn(){return /^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(LEAGUE.url)&&LEAGUE.key.length>30}
+async function sb(path,opt){opt=opt||{};
+  const r=await fetch(LEAGUE.url+"/rest/v1/"+path,{method:opt.method||"GET",headers:Object.assign({apikey:LEAGUE.key,"Content-Type":"application/json",Prefer:opt.prefer||""},LEAGUE.key.startsWith("eyJ")?{Authorization:"Bearer "+LEAGUE.key}:{}),body:opt.body});
+  if(!r.ok)throw new Error(r.status+" "+(await r.text()).slice(0,120));
+  return (opt.method&&opt.method!=="GET")?null:r.json()}
+async function pushProfile(name){if(!leagueOn())return;const p=getProfile(name);if(!p.games)return;
+  try{await sb("profiles",{method:"POST",prefer:"resolution=merge-duplicates,return=minimal",body:JSON.stringify({league:LEAGUE.code,key:pkey(name),name:p.name,data:p,games:p.games,g:p.g,updated_at:new Date().toISOString()})})}catch(e){console.warn("ligue push",e.message)}}
+function mergeRows(rows){const all=loadProfiles();rows.forEach(r=>{if(!r||!r.data)return;const loc=all[r.key];if(!loc||(r.games||0)>=(loc.games||0))all[r.key]=r.data});saveProfiles(all)}
+async function pullAll(){if(!leagueOn())return false;mergeRows(await sb(`profiles?league=eq.${encodeURIComponent(LEAGUE.code)}&select=key,name,data,games`));return true}
+async function pullProfile(name){if(!leagueOn()||!String(name).trim())return;
+  try{mergeRows(await sb(`profiles?league=eq.${encodeURIComponent(LEAGUE.code)}&key=eq.${encodeURIComponent(pkey(name))}&select=key,name,data,games`));updateStrip()}catch(e){console.warn("ligue pull",e.message)}}
+async function pushMatch(w,tot){if(!leagueOn()||NET.role==="guest")return;
+  try{await sb("matches",{method:"POST",prefer:"return=minimal",body:JSON.stringify({league:LEAGUE.code,p1:S.p[0].name,p2:S.p[1].name,s1:tot[0],s2:tot[1],winner:w===-1?null:S.p[w].name,pool:S.poolLabel||"Tous",mode:cfg.mode,size:cfg.size,budget:cfg.budget})})}catch(e){console.warn("ligue match",e.message)}}
+async function recentMatches(){if(!leagueOn())return [];return sb(`matches?league=eq.${encodeURIComponent(LEAGUE.code)}&select=played_at,p1,p2,s1,s2,winner,pool,mode&order=played_at.desc&limit=15`)}
+let pullT=null;$("n1").addEventListener("input",()=>{clearTimeout(pullT);pullT=setTimeout(()=>pullProfile($("n1").value),700)});
+pullProfile($("n1").value);
+
+// ---------- Partie ----------
+function start(){
+  if(!poolValid())return;
+  NET.meReady=false;NET.peerReady=false;
+  if(cfg.mode==="online"){if(NET.role!=="host"||!NET.connected)return;cfg.names=[myName(),NET.peerName||"Ami"]}
+  else cfg.names=[$("n1").value.trim()||"Manager 1",$("n2").value.trim()||"Manager 2"];
+  clearTimeout(aiTimer);
+  S={p:[{name:cfg.names[0],budget:cfg.budget,team:[],passes:0,ai:false},{name:cfg.names[1],budget:cfg.budget,team:[],passes:0,ai:cfg.mode==="ai"}],
+     pool:shuffle(POOL.slice()),discarded:[],avg:Math.round(POOL.reduce((s,p)=>s+p.val,0)/POOL.length),poolLabel:POOL_LABEL,cur:null,bid:0,bidder:-1,actor:0,first:Math.floor(Math.random()*2),round:0,log:[],lastActor:-1};
+  S.p[1].temper=[0.75,0.95,1.1][cfg.level-1]; S.p[1].noise=[0.5,0.3,0.12][cfg.level-1];
+  $("log").innerHTML="";logBuf=[];
+  show("game");
+  addLog(`${S.p[S.first].name} parle en premier au tour 1.`,"d");
+  nextRound(true);
+}
+function addLog(msg,cls){const d=document.createElement("div");d.className=cls||"";d.textContent=msg;$("log").prepend(d);if(NET.role==="host")logBuf.push({m:msg,c:cls||""})}
+
+function nextRound(firstRound){
+  if(isFull(0)&&isFull(1)){return endGame()}
+  if(!S.pool.length){S.pool=shuffle(S.discarded);S.discarded=[]}
+  S.cur=S.pool.pop();S.round++;S.bid=0;S.bidder=-1;S.lock=false;
+  if(!firstRound)S.first=1-S.first;
+  // mode solo : celui qui n'est pas complet joue seul
+  if(isFull(0)||isFull(1)){S.actor=isFull(0)?1:0;S.solo=true}else{S.actor=S.first;S.solo=false}
+  S.cur.aiEst=S.cur.val*(1+(Math.random()*2-1)*S.p[1].noise);
+  render(true);
+  turn();
+}
+let turnTimer=null;
+function armTimer(){
+  clearTimeout(turnTimer);S.tEnd=0;
+  if(cfg.mode!=="online"||NET.role!=="host"||!cfg.timer||S.solo||S.over)return;
+  S.tEnd=Date.now()+cfg.timer*1000;
+  const round=S.round,actor=S.actor,bid=S.bid;
+  turnTimer=setTimeout(()=>{
+    if(!S||S.over||S.lock||S.round!==round||S.actor!==actor||S.bid!==bid)return;
+    if(S.bidder===-1){addLog(`${S.p[actor].name} : temps écoulé, ouverture automatique.`,"d");doBid(actor,S.bid+steps()[0])}
+    else{addLog(`${S.p[actor].name} : temps écoulé, laisse le footballeur.`,"d");sell(S.bidder)}
+  },cfg.timer*1000+150);
+}
+setInterval(()=>{const el=$("tbar");if(!el||!S||!S.tEnd||!cfg.timer){if(el)el.style.display="none";return}
+  const left=Math.max(0,S.tEnd-Date.now());const pct=Math.min(100,100*left/(cfg.timer*1000));
+  el.style.display="";el.querySelector("i").style.width=pct+"%";el.querySelector("i").classList.toggle("low",left<3000);$("tlbl").textContent=Math.ceil(left/1000)+" s"},200);
+function turn(){
+  const i=S.actor;
+  if(S.solo){disableActs(true);setPrompt(`${esc(S.p[i].name)} achète seul, au prix minimum…`);aiTimer=setTimeout(()=>soloRecruit(i),1100);return}
+  if(S.p[i].ai){setPrompt(`<span class="think">${S.p[i].name} réfléchit…</span>`);disableActs(true);aiTimer=setTimeout(aiAct,650+Math.random()*700);return}
+  if(cfg.mode==="hot"&&S.lastActor!==i){S.lastActor=i;handoff(i);return}
+  S.lastActor=i;armTimer();render(false);
+}
+function handoff(i){
+  $("hoName").textContent=`Au tour de ${S.p[i].name}`;
+  $("hoMsg").textContent=S.bidder===-1?"Tu ouvres l'enchère : mise obligatoire, au minimum la mise de base.":`${S.p[S.bidder].name} a misé ${fmt(S.bid)} M€. Surenchéris ou laisse-le-lui.`;
+  $("handoff").classList.add("on");
+  $("hoBtn").onclick=()=>{$("handoff").classList.remove("on");render(false)};
+}
+
+// actions humaines
+function bid(step){if(NET.role==="guest"){send({t:"act",a:"bid",step});return}const i=S.actor;const amt=S.bid+step;if(amt>maxBid(i))return;doBid(i,amt)}
+function doBid(i,amt){
+  S.bid=amt;S.bidder=i;S.actor=1-i;
+  addLog(`${S.p[i].name} mise ${fmt(amt)} M€ sur ${S.cur.name}.`);
+  render(false);turn();
+}
+function pass(){if(NET.role==="guest"){send({t:"act",a:"pass"});return}if(S.bidder===-1)return;sell(S.bidder)}
+function sell(i){
+  if(S.lock)return;S.lock=true;clearTimeout(turnTimer);S.tEnd=0;
+  const price=S.bid;S.p[i].team.push(Object.assign({},S.cur,{paid:price}));S.p[i].budget-=price;
+  addLog(`${S.cur.name} → ${S.p[i].name} pour ${fmt(price)} M€.`,"s");toast(`Vendu à ${S.p[i].name} !`,true);
+  render(false);fxStamp("Vendu !");if(NET.role==="host")send({t:"fx",k:"sold"});disableActs(true);setTimeout(nextRound,1050);
+}
+function soloRecruit(i){
+  if(S.lock)return;S.lock=true;clearTimeout(turnTimer);S.tEnd=0;
+  const price=minBid();S.p[i].team.push(Object.assign({},S.cur,{paid:price}));S.p[i].budget-=price;
+  addLog(`${S.cur.name} → ${S.p[i].name} pour ${fmt(price)} M€ (sans concurrence).`,"s");toast(`Recruté !`,true);
+  render(false);fxStamp("Recruté",true);if(NET.role==="host")send({t:"fx",k:"rec"});disableActs(true);setTimeout(nextRound,1050);
+}
+
+// IA
+function aiAct(){
+  const i=S.actor,me=S.p[i],est=S.cur.aiEst,st=steps();
+  const perSlot=me.budget/slotsLeft(i);
+  const ratio=Math.min(1.6,Math.max(0.35,perSlot/S.avg));
+  const ceiling=Math.min(maxBid(i),est*ratio*me.temper);
+  if(S.bidder===-1){
+    // ouverture obligatoire ; parfois grosse mise pour intimider
+    const open=(est>S.avg*1.2&&Math.random()<0.35&&S.bid+st[1]<=ceiling)?st[1]:st[0];
+    return doBid(i,S.bid+open);
+  }
+  if(S.bid+st[0]>ceiling)return aiPass();
+  let step=st[0];
+  if(S.bid+st[2]<=ceiling*0.85&&Math.random()<0.3)step=st[2];else if(S.bid+st[1]<=ceiling*0.9&&Math.random()<0.5)step=st[1];
+  doBid(i,S.bid+step);
+}
+function aiPass(){sell(S.bidder)}
+
+// ---------- Rendu ----------
+function setPrompt(html){$("prompt").innerHTML=html+' <span id="tlbl" class="tlbl"></span>'}
+function disableActs(d){["b1","b2","b3","btnPass"].forEach(id=>$(id).disabled=d)}
+function render(newCard){
+  const st=steps();
+  $("board").innerHTML=S.p.map((m,i)=>`<div class="mgr ${S.actor===i&&!isFull(i)?"turn":""}">
+    <div class="nm"><span class="dot"></span>${esc(m.name)}</div>
+    <div class="bud">${fmt(m.budget)}<small>M€</small></div>
+    <div class="slots">${Array.from({length:cfg.size},(_,k)=>`<span class="slot ${k<m.team.length?"f":""}"></span>`).join("")}</div>
+    ${isFull(i)?'<span class="full">Complet</span>':""}
+  </div>`).join("");
+  $("roundLbl").textContent=`Tour ${S.round} · ${S.poolLabel||""}`;
+  $("poolLbl").textContent=`${S.pool.length} joueurs restants dans la base`;
+  const c=S.cur,card=$("card");card.classList.toggle("expert",!!cfg.expert);
+  card.innerHTML=`<span class="pos">${c.pos}</span><div class="flag">${FLAG[c.nat]||"🏳️"}</div><h2 class="name">${esc(c.name)}</h2>
+    <div class="sub"><b>${esc(c.club)}</b> · ${POSLBL[c.pos]} · ${c.age} ans</div>
+    <div class="hidden-val">Valeur marchande <i>?????</i></div>${cfg.expert?'<div class="xp">Mode expert · indices masqués</div>':""}<div class="shine"></div>`;
+  if(newCard){card.classList.remove("pop");void card.offsetWidth;card.classList.add("pop");lastShownBid=0}
+  $("curBid").innerHTML=S.bidder===-1?"—":`${fmt(S.bid)}<small>M€</small>`;
+  if(S.bid>lastShownBid&&lastShownBid>=0&&S.bidder!==-1)fxBid(S.bid-lastShownBid);
+  lastShownBid=Math.max(lastShownBid,S.bid);
+  $("curWho").innerHTML=S.bidder===-1?`<b>Aucune mise</b>ouverture à ${st[0]} M€ minimum`:`<b>${esc(S.p[S.bidder].name)}</b>mène l'enchère`;
+  const i=S.actor,mb=maxBid(i);
+  if(S.solo){
+    $("acts").style.display="none";$("btnPass").style.display="none";disableActs(true);
+    setPrompt(`${esc(S.p[i].name)} achète seul, au prix minimum…`);
+    $("maxnote").textContent=`L'équipe adverse est complète : ${esc(S.p[i].name)} achète les tirages suivants sans concurrence, au prix minimum (${st[0]} M€).`;
+    sync(newCard);
+    return;
+  }
+  $("acts").style.display="";$("btnPass").style.display="";
+  $("btnPass").className="pass";$("btnPass").onclick=pass;
+  $("btnPass").textContent=S.bidder===-1?"Ouverture obligatoire":`Laisser à ${S.p[S.bidder].name}`;
+  setPrompt(S.bidder===-1?`À toi, ${esc(S.p[i].name)} : tu ouvres (mise minimum ${st[0]} M€)`:`À toi, ${esc(S.p[i].name)}`);
+  [["b1",st[0]],["b2",st[1]],["b3",st[2]]].forEach(([id,s])=>{const b=$(id);const amt=S.bid+s;b.innerHTML=`${fmt(amt)}<small>+${s} M€</small>`;b.onclick=()=>bid(s);b.disabled=amt>mb});
+  $("maxnote").textContent=`Mise maximale pour ${S.p[i].name} : ${fmt(mb)} M€ (il faut pouvoir remplir les ${slotsLeft(i)} place${slotsLeft(i)>1?"s":""} restante${slotsLeft(i)>1?"s":""}).`;
+  const canAct=!S.p[i].ai&&(!NET.role||i===NET.myIndex);
+  disableActs(!canAct);
+  if(S.bidder===-1)$("btnPass").disabled=true;
+  if(!canAct&&NET.role)setPrompt(`En attente de ${esc(S.p[i].name)}…`);
+  sync(newCard);
+}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+
+// ---------- Fin de partie ----------
+function endGame(){
+  if(NET.role==="host"){S.over=true;sync(false)}
+  show("reveal");
+  NET.meReady=false;NET.peerReady=false;
+  $("btnAgain").textContent=NET.role?"Revanche":"Rejouer";$("btnHome").textContent=NET.role==="guest"?"Quitter":"Réglages";
+  $("againStatus").textContent="";
+  const tot=S.p.map(m=>m.team.reduce((s,x)=>s+x.val,0));
+  $("winner").className="w";$("winner").textContent="";$("why").textContent="";$("ratingBox").innerHTML="";
+  $("teams").innerHTML=S.p.map((m,i)=>`<div class="team" id="team${i}">
+    <div class="tn"><span class="dot" style="width:8px;height:8px;border-radius:50%;background:${i?"var(--p2)":"var(--p1)"}"></span>${esc(m.name)}</div>
+    <div class="tt" id="tot${i}">0<small>M€</small></div>
+    ${m.team.map((x,k)=>`<div class="row"><span class="pn">${esc(x.name)}<br><small>payé ${fmt(x.paid)}</small></span><span class="pv ${x.val>=x.paid?"good":"bad"}" id="pv${i}_${k}">${fmt(x.val)}</span></div>`).join("")}
+    <div class="row"><span class="pn"><small>Budget restant</small></span><span class="pv show" style="color:var(--muted)">${fmt(m.budget)}</span></div>
+  </div>`).join("");
+  // révélation ligne par ligne
+  const run=[0,0];let k=0;
+  const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const iv=setInterval(()=>{
+    let any=false;
+    for(let i=0;i<2;i++){const x=S.p[i].team[k];if(x){any=true;const from=run[i];run[i]+=x.val;$(`pv${i}_${k}`).classList.add("show");tween($(`tot${i}`),from,run[i],420)}}
+    k++;
+    if(!any){clearInterval(iv);verdict(tot)}
+  },reduce?0:550);
+}
+function verdict(tot){
+  let w=-1,why="";
+  if(tot[0]!==tot[1]){w=tot[0]>tot[1]?0:1;why=`${fmt(tot[w])} M€ contre ${fmt(tot[1-w])} M€`}
+  else{
+    const b=S.p.map(m=>m.budget);
+    if(b[0]!==b[1]){w=b[0]>b[1]?0:1;why=`Égalité en valeur ; départage au budget restant (${fmt(b[w])} M€ contre ${fmt(b[1-w])} M€)`}
+    else{const mx=S.p.map(m=>Math.max(...m.team.map(x=>x.val)));if(mx[0]!==mx[1]){w=mx[0]>mx[1]?0:1;why="Égalité ; départage au footballeur le plus cher"}else why="Égalité parfaite"}
+  }
+  const el=$("winner");
+  el.textContent=w===-1?"Match nul":`${S.p[w].name} gagne`;el.classList.add("show");
+  $("why").textContent=why;
+  if(w!==-1){$(`team${w}`).classList.add("win");confetti()}
+  applyRatings(w,tot);
+}
+function applyRatings(w,tot){
+  const sc=i=>w===-1?0.5:(w===i?1:0);
+  const results=[];
+  if(cfg.mode==="ai"){$("ratingBox").innerHTML=`<div class="rbox"><p class="t"><span>Partie d'entraînement</span></p><div class="ln"><span>Les parties contre l'ordinateur ne comptent ni pour les scores ni pour le classement.</span></div></div>`;return}
+  if(cfg.mode==="hot"){const r0=myRatings(S.p[0].name),r1=myRatings(S.p[1].name);results.push(applyResult(S.p[0].name,r1,sc(0),tot[0],tot[1],S.p[1].name));results.push(applyResult(S.p[1].name,r0,sc(1),tot[1],tot[0],S.p[0].name))}
+  else{const me=(typeof NET!=="undefined"&&NET.role)?NET.myIndex:0;const opp=(typeof NET!=="undefined"&&NET.oppRatings)||{g:1000,cats:{}};results.push(applyResult(S.p[me].name,opp,sc(me),tot[me],tot[1-me],S.p[1-me].name));if(typeof NET!=="undefined"&&NET.role)send({t:"rating",r:myRatings(S.p[me].name)})}
+  renderRatingBox(results);updateStrip();
+  results.forEach(r=>pushProfile(r.name));if(cfg.mode!=="ai")pushMatch(w,tot);
+}
+</script>
+<script>
+if("serviceWorker" in navigator&&location.protocol==="https:"){addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}))}
+</script>
+</body>
+</html>
