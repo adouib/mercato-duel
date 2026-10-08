@@ -1,7 +1,7 @@
 {
-  "name": "Mercato Duel",
-  "short_name": "Mercato Duel",
-  "description": "Le duel d'enchères foot : deux managers, un budget, un footballeur par tour.",
+  "name": "Foot Duel",
+  "short_name": "Foot Duel",
+  "description": "Jeux de connaissance foot entre amis : Mercato Duel, Carrière, Le 11, Top 10, Grille 3×3 et le match du jour.",
   "lang": "fr",
   "start_url": "./",
   "scope": "./",
